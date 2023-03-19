@@ -12,7 +12,7 @@ import java.util.List;
 public class ProductController {
 
     @GetMapping
-    public String getUsers()
+    public String getProducts()
     {
         return "product";
     }
