@@ -3,6 +3,7 @@ package com.authenticationApp.authentication.dao;
 import com.authenticationApp.authentication.entity.AuthenticationEntity;
 import com.authenticationApp.authentication.repository.AuthenticationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

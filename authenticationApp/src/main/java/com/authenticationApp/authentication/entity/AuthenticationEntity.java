@@ -3,6 +3,7 @@ package com.authenticationApp.authentication.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.redis.core.RedisHash;
 
 @Table(name = "authentication")
 @Entity

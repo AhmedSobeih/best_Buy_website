@@ -12,20 +12,41 @@ import java.util.List;
 @RequestMapping(path = "/parent")
 public class ParentController {
 
-//    @Autowired
-//    private AuthenticationSender authenticationSender;
-//    @Autowired
-//    private AuthenticationReceiver authenticationReceiver;
-
     private final RabbitTemplate rabbitTemplate;
     public ParentController(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
     @RabbitListener(queues = "AuthenticationSender")
-    public void test(String test) {
+    public void retrieveFromAuthentication(String test) {
         System.out.println(test);
         String message = "Welcome to our platform, " + test + "!";
         rabbitTemplate.convertAndSend("UserReceiver", message);
     }
+
+    @RabbitListener(queues = "ProductsSender")
+    public void retrieveFromProducts(String test) {
+        
+    }
+
+
+    @RabbitListener(queues = "TransactionsSender")
+    public void retrieveFromTransactions(String test) {
+        String message = "Welcome to our platform, " + test + "!";
+        rabbitTemplate.convertAndSend("UserReceiver", message);
+    }
+
+    @RabbitListener(queues = "MessageSender")
+    public void retrieveFromMessage(String test) {
+        String message = "Welcome to our platform, " + test + "!";
+        rabbitTemplate.convertAndSend("UserReceiver", message);
+    }
+
+
+    @RabbitListener(queues = "UserSender")
+    public void retrieveFromUser(String test) {
+        String message = "Welcome to our platform, " + test + "!";
+        rabbitTemplate.convertAndSend("UserReceiver", message);
+    }
+
 }
