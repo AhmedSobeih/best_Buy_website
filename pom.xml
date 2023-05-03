@@ -51,4 +51,8 @@
 		</plugins>
 	</build>
 
+	<modules>
+		<module>authenticationApp</module>
+	</modules>
+
 </project>
