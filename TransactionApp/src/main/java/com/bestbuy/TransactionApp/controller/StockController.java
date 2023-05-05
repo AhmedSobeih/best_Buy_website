@@ -19,22 +19,26 @@ import java.util.List;
 @Tag(name = "Stock Controller")
 public class StockController {
     private final StockService stockService;
-    @GetMapping("/{product_id}")
-    @ResponseStatus(HttpStatus.OK)
-    public boolean isInStock(@PathVariable("product_id") String productId){
-        log.info("Received stock check request for product_id: {}", productId);
-        return stockService.canDecrementStock(productId,1).isPresent();
-    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<StockResponse> getAllStocks(){
+        log.info("Sent all stocks");
         return stockService.getAllStocks();
     }
+
+    @GetMapping("/{product_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public StockResponse isInStock(@PathVariable("product_id") String productId){
+        log.info("Sent stock of product with id: {}", productId);
+        return stockService.getStockById(productId);
+    }
+
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public StockResponse createStock(@RequestBody StockRequest stockRequest) {
+        log.info("Created stock: {}", stockRequest);
         return stockService.createStock(stockRequest.getProductId(), stockRequest.getPrice(), stockRequest.getQuantity());
     }
 }

@@ -8,6 +8,8 @@ import com.bestbuy.TransactionApp.repository.ShoppingCartRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -29,8 +31,9 @@ public class ShoppingCartService {
     private ShoppingCartResponse mapToShoppingCartResponse(ShoppingCart shoppingCart){
         return ShoppingCartResponse.builder()
                 .userId(shoppingCart.getUserId())
-                .createdAt(shoppingCart.getCreatedAt()).build();
-        //TODO: list of cart items building
+                .createdAt(shoppingCart.getCreatedAt())
+                .cartItemList(shoppingCart.getCartItemList().stream().map(cartItemList -> cartItemService.mapToCartItemResponse(cartItemList)).toList())
+                .build();
     }
 
     public Boolean isShoppingCartEmpty(Long userId){
@@ -45,11 +48,20 @@ public class ShoppingCartService {
         CartItem cartItem = cartItemService.creatCartItem(prodcutId, quantity);
         ShoppingCart shoppingCart = shoppingCartRepository.getReferenceById(userId);
         shoppingCart.getCartItemList().add(cartItem);
+        shoppingCartRepository.save(shoppingCart);
         return cartItemService.mapToCartItemResponse(cartItem);
     }
 
     public List<ShoppingCartResponse> getAllShoppingCarts() {
         List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAll();
         return shoppingCarts.stream().map(shoppingCart -> mapToShoppingCartResponse(shoppingCart)).toList();
+    }
+
+    public ShoppingCartResponse getShoppingCart(Long userId) {
+        Optional<ShoppingCart> optionalShoppingCart = shoppingCartRepository.findById(userId);
+        if(optionalShoppingCart.isPresent())
+            return mapToShoppingCartResponse(optionalShoppingCart.get());
+        else
+            throw new NoSuchElementException("Shopping Cart with id " + userId + "doesn't exist");
     }
 }

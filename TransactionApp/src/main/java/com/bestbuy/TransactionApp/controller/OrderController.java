@@ -18,25 +18,33 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
-    @PostMapping("/{user_id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public OrderResponse placeOrder(@PathVariable("user_id") Long userId){
-        //TODO: try and catch exceptions
-        OrderResponse orderResponse = orderService.placeOrder(userId);
-        log.info("Order created with ID: {}", orderResponse);
-        return orderResponse;
-    }
-
-    @GetMapping("/{user_id}")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderResponse> getAllOrders(@PathVariable("user_id") Long userId){
-        return orderService.getAllOrders(userId);
+    public List<OrderResponse> getAllOrders(){
+        log.info("Sent all orders");
+        return orderService.getAllOrders();
     }
 
     @GetMapping("/{order_id}")
     @ResponseStatus(HttpStatus.OK)
     public OrderResponse getOrder(@PathVariable("order_id") Long orderId){
+        log.info("Sent order with id: {}", orderId);
         return orderService.getOrder(orderId);
     }
+
+    @GetMapping("/user/{user_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<OrderResponse> getAllUserOrders(@PathVariable("user_id") Long userId){
+        log.info("Sent orders of user with id: {}", userId);
+        return orderService.getAllUserOrders(userId);
+    }
+
+    @PostMapping("/{user_id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderResponse placeOrder(@PathVariable("user_id") Long userId){
+        log.info("Placed order for user with id: {}", userId);
+        return orderService.placeOrder(userId);
+    }
+
 
 }

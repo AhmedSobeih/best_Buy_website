@@ -20,8 +20,13 @@ public class OrderService {
         return null;
     }
 
-    public List<OrderResponse> getAllOrders(Long userId) {
+    public List<OrderResponse> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
+        return orders.stream().map(order -> OrderResponse.mapOrder(order)).toList();
+    }
+
+    public List<OrderResponse> getAllUserOrders(Long userId) {
+        List<Order> orders = orderRepository.getByUserId(userId);
         return orders.stream().map(order -> OrderResponse.mapOrder(order)).toList();
     }
 
@@ -32,5 +37,6 @@ public class OrderService {
         else
             throw new NoSuchElementException("Order with id " + orderId + "doesn't exist");
     }
+
 
 }

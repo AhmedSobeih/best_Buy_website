@@ -26,23 +26,29 @@ public class ShoppingCartController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ShoppingCartResponse> getAllShoppingCarts(){
+        log.info("Sent all shopping carts");
         return shoppingCartService.getAllShoppingCarts();
+    }
+
+    @GetMapping("/{user_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ShoppingCartResponse getShoppingCart(@PathVariable("user_id") Long userId){
+        log.info("Sent shopping cart of user with id: {}", userId);
+        return shoppingCartService.getShoppingCart(userId);
     }
 
 
     @PostMapping("/{user_id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ShoppingCartResponse createShoppingCart(@PathVariable("user_id") Long userId){
-        //TODO: try and catch exceptions
-        ShoppingCartResponse shoppingCartResponse = shoppingCartService.createShoppingCart(userId);
-        log.info("Shopping Cart created with ID: {}", shoppingCartResponse.getUserId());
-
-        return shoppingCartResponse;
+        log.info("Created shopping cart for user: {}", userId);
+        return shoppingCartService.createShoppingCart(userId);
     }
 
     @PostMapping("/add-cart-item")
     @ResponseStatus(HttpStatus.CREATED)
     public CartItemResponse createCartItem(@RequestBody CartItemRequest cartItemRequest){
+        log.info("Added cart item: {}", cartItemRequest);
         return shoppingCartService.createCartItem(cartItemRequest.getProductId(), cartItemRequest.getQuantity(), cartItemRequest.getUserId());
     }
 

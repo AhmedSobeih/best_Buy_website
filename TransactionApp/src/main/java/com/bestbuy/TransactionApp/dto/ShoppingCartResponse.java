@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Data
@@ -11,5 +12,5 @@ public class ShoppingCartResponse {
 
     private Long userId;
     private LocalDateTime createdAt;
-    //TODO: List<CartItem> cartItemList;
+    private List<CartItemResponse> cartItemList;
 }
