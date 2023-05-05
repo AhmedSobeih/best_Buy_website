@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
 
-import java.math.BigDecimal;
-
 @Table(name = "stock")
 @Entity
 @Getter
