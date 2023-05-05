@@ -1,11 +1,23 @@
 package com.bestbuy.TransactionApp.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.Check;
+
+import java.math.BigDecimal;
 
 @Table(name = "stock")
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Stock {
+    @Id
+    @Column(name = "product_id",nullable = false)
+    private String productId;
+    private Double price;
+    @Column(columnDefinition = "int default 0")
+    @Check(constraints = "quantity>=0")
+    private Integer quantity;
 }

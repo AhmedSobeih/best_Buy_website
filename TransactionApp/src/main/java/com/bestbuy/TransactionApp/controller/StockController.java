@@ -1,0 +1,23 @@
+package com.bestbuy.TransactionApp.controller;
+
+import com.bestbuy.TransactionApp.repository.StockRepository;
+import com.bestbuy.TransactionApp.service.StockService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/stock")
+@RequiredArgsConstructor
+@Slf4j
+public class StockController {
+    private final StockService stockService;
+    @GetMapping("/{product_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean isInStock(@PathVariable("product_id") String productId){
+        log.info("Received stock check request for product_id: {}", productId);
+        return stockService.isInStock(productId);
+    }
+}
