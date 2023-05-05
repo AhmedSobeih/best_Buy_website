@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "shopping_cart")
@@ -22,5 +23,10 @@ public class ShoppingCart {
     private LocalDateTime createdAt;
     @OneToMany(cascade = CascadeType.ALL)
     List<CartItem> cartItemList;
+
+    public ShoppingCart(Long userId){
+        this.userId = userId;
+        this.cartItemList = new ArrayList<>();
+    }
 
 }
