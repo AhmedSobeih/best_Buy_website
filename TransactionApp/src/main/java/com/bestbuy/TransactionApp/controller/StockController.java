@@ -3,6 +3,8 @@ package com.bestbuy.TransactionApp.controller;
 import com.bestbuy.TransactionApp.dto.StockRequest;
 import com.bestbuy.TransactionApp.dto.StockResponse;
 import com.bestbuy.TransactionApp.service.StockService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,9 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/stock")
+@RequestMapping("/api/v1/stock")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Stock Controller")
 public class StockController {
     private final StockService stockService;
     @GetMapping("/{product_id}")

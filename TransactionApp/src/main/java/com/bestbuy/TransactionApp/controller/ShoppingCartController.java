@@ -4,6 +4,8 @@ import com.bestbuy.TransactionApp.dto.CartItemRequest;
 import com.bestbuy.TransactionApp.dto.CartItemResponse;
 import com.bestbuy.TransactionApp.dto.ShoppingCartResponse;
 import com.bestbuy.TransactionApp.service.ShoppingCartService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/shopping-cart")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Shopping Cart Controller")
 public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;

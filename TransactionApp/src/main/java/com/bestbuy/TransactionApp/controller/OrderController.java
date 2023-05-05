@@ -1,23 +1,20 @@
 package com.bestbuy.TransactionApp.controller;
 
 import com.bestbuy.TransactionApp.dto.OrderResponse;
-import com.bestbuy.TransactionApp.dto.ShoppingCartResponse;
-import com.bestbuy.TransactionApp.dto.StockRequest;
-import com.bestbuy.TransactionApp.dto.StockResponse;
-import com.bestbuy.TransactionApp.model.Stock;
 import com.bestbuy.TransactionApp.service.OrderService;
-import com.bestbuy.TransactionApp.service.StockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/order")
+@RequestMapping("/api/v1/order")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Order Controller")
 public class OrderController {
     private final OrderService orderService;
 

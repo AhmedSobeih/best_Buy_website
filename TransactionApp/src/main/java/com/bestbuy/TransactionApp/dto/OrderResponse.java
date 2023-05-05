@@ -1,14 +1,10 @@
 package com.bestbuy.TransactionApp.dto;
 
 import com.bestbuy.TransactionApp.model.Order;
-import com.bestbuy.TransactionApp.model.OrderItem;
-import com.bestbuy.TransactionApp.model.Stock;
-import com.bestbuy.TransactionApp.repository.OrderRepository;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Builder
 @Data
