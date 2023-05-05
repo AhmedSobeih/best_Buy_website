@@ -1,6 +1,8 @@
 package com.bestbuy.TransactionApp.service;
 
+import com.bestbuy.TransactionApp.dto.CartItemResponse;
 import com.bestbuy.TransactionApp.dto.ShoppingCartResponse;
+import com.bestbuy.TransactionApp.model.CartItem;
 import com.bestbuy.TransactionApp.model.ShoppingCart;
 import com.bestbuy.TransactionApp.repository.ShoppingCartRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class ShoppingCartService {
 
     private final ShoppingCartRepository shoppingCartRepository;
+    private final CartItemService cartItemService;
 
     public ShoppingCartResponse createShoppingCart(Long userId) {
         ShoppingCart shoppingCart = new ShoppingCart(userId);
@@ -33,5 +36,12 @@ public class ShoppingCartService {
 
     public void clearShoppingCart(Long userId){
         shoppingCartRepository.getReferenceById(userId).getCartItemList().clear();
+    }
+
+    public CartItemResponse createCartItem(String prodcutId, Integer quantity, Long userId) {
+        CartItem cartItem = cartItemService.creatCartItem(prodcutId, quantity);
+        ShoppingCart shoppingCart = shoppingCartRepository.getReferenceById(userId);
+        shoppingCart.getCartItemList().add(cartItem);
+        return cartItemService.mapToCartItemResponse(cartItem);
     }
 }

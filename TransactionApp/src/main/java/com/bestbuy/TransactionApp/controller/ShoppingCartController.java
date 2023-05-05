@@ -1,10 +1,10 @@
 package com.bestbuy.TransactionApp.controller;
 
+import com.bestbuy.TransactionApp.dto.CartItemRequest;
+import com.bestbuy.TransactionApp.dto.CartItemResponse;
 import com.bestbuy.TransactionApp.dto.ShoppingCartResponse;
-import com.bestbuy.TransactionApp.model.ShoppingCart;
 import com.bestbuy.TransactionApp.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +25,12 @@ public class ShoppingCartController {
         log.info("Shopping Cart created with ID: {}", shoppingCartId);
 
         return shoppingCartId;
+    }
+
+    @PostMapping("/add-cart-item")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CartItemResponse createCartItem(@RequestBody CartItemRequest cartItemRequest){
+        return shoppingCartService.createCartItem(cartItemRequest.getProductId(), cartItemRequest.getQuantity(), cartItemRequest.getUserId());
     }
 
 }

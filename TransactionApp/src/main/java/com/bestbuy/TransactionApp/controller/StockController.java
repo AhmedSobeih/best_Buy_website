@@ -2,12 +2,9 @@ package com.bestbuy.TransactionApp.controller;
 
 import com.bestbuy.TransactionApp.dto.StockRequest;
 import com.bestbuy.TransactionApp.dto.StockResponse;
-import com.bestbuy.TransactionApp.model.Stock;
-import com.bestbuy.TransactionApp.repository.StockRepository;
 import com.bestbuy.TransactionApp.service.StockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +31,7 @@ public class StockController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public String createStock(@RequestBody StockRequest stockRequest) {
-        Stock stock = stockService.createStock(stockRequest.getProductId(), stockRequest.getPrice(), stockRequest.getQuantity());
-        return "Stock Created Successfully";
+    public StockResponse createStock(@RequestBody StockRequest stockRequest) {
+        return stockService.createStock(stockRequest.getProductId(), stockRequest.getPrice(), stockRequest.getQuantity());
     }
 }
