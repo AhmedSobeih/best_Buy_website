@@ -7,7 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Table(name = "t_shopping_cart")
+@Table(name = "shopping_cart")
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
