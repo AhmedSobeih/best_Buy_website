@@ -23,7 +23,7 @@ public class StockController {
     @ResponseStatus(HttpStatus.OK)
     public boolean isInStock(@PathVariable("product_id") String productId){
         log.info("Received stock check request for product_id: {}", productId);
-        return stockService.isInStock(productId);
+        return stockService.canDecrementStock(productId,1).isPresent();
     }
 
     @GetMapping
