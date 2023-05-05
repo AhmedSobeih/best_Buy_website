@@ -26,4 +26,12 @@ public class ShoppingCartService {
                 .createdAt(shoppingCart.getCreatedAt()).build();
         //TODO: list of cart items building
     }
+
+    public Boolean isShoppingCartEmpty(Long userId){
+        return shoppingCartRepository.getReferenceById(userId).getCartItemList().size() == 0;
+    }
+
+    public void clearShoppingCart(Long userId){
+        shoppingCartRepository.getReferenceById(userId).getCartItemList().clear();
+    }
 }
