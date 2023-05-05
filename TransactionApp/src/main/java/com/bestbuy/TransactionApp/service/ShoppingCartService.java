@@ -6,6 +6,9 @@ import com.bestbuy.TransactionApp.model.CartItem;
 import com.bestbuy.TransactionApp.model.ShoppingCart;
 import com.bestbuy.TransactionApp.repository.ShoppingCartRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,5 +46,10 @@ public class ShoppingCartService {
         ShoppingCart shoppingCart = shoppingCartRepository.getReferenceById(userId);
         shoppingCart.getCartItemList().add(cartItem);
         return cartItemService.mapToCartItemResponse(cartItem);
+    }
+
+    public List<ShoppingCartResponse> getAllShoppingCarts() {
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAll();
+        return shoppingCarts.stream().map(shoppingCart -> mapToShoppingCartResponse(shoppingCart)).toList();
     }
 }

@@ -8,6 +8,9 @@ import com.bestbuy.TransactionApp.service.ShoppingCartService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,14 +23,21 @@ public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ShoppingCartResponse> getAllShoppingCarts(){
+        return shoppingCartService.getAllShoppingCarts();
+    }
+
+
     @PostMapping("/{user_id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ShoppingCartResponse createShoppingCart(@PathVariable("user_id") Long userId){
         //TODO: try and catch exceptions
-        ShoppingCartResponse shoppingCartId = shoppingCartService.createShoppingCart(userId);
-        log.info("Shopping Cart created with ID: {}", shoppingCartId);
+        ShoppingCartResponse shoppingCartResponse = shoppingCartService.createShoppingCart(userId);
+        log.info("Shopping Cart created with ID: {}", shoppingCartResponse.getUserId());
 
-        return shoppingCartId;
+        return shoppingCartResponse;
     }
 
     @PostMapping("/add-cart-item")
