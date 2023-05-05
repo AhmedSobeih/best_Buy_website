@@ -6,6 +6,7 @@ import com.bestbuy.TransactionApp.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,9 +15,29 @@ import java.util.Optional;
 public class StockService {
     private final StockRepository stockRepository;
 
+    public Boolean decrementStock(String productId,Integer quantity){
+        Optional<Stock> stockOptional = canDecrementStock(productId, quantity);
+        if(!stockOptional.isPresent()){
+            return false;
+        }
+        Stock stock = stockOptional.get();
 
-    public boolean isInStock(String productId) {
-        return stockRepository.getStockByProductId(productId).isPresent();
+        stock.setQuantity(stock.getQuantity()-quantity);
+        if(stock.getQuantity()==0){
+            stockRepository.deleteById(stock.getProductId());
+        }
+        return true;
+    }
+
+    public Optional<Stock> canDecrementStock(String productId, Integer quantity) {
+        Optional<Stock> stock = stockRepository.getStockByProductId(productId);
+        if(stock.isPresent()) {
+            if (stock.get().getQuantity() >= quantity) {
+                return stock;
+            }
+            return Optional.empty();
+        }
+        return Optional.empty();
     }
 
     public Stock createStock(String productId, Double price, Integer quantity) {

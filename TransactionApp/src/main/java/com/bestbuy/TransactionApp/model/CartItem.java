@@ -1,10 +1,7 @@
 package com.bestbuy.TransactionApp.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Check;
 
 @Table(name = "cart_item")
@@ -13,6 +10,7 @@ import org.hibernate.annotations.Check;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
