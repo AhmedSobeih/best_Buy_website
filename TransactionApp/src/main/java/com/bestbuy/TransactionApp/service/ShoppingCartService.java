@@ -21,6 +21,10 @@ public class ShoppingCartService {
     private final CartItemService cartItemService;
 
     public ShoppingCartResponse createShoppingCart(Long userId) {
+        Optional<ShoppingCart> optionalShoppingCart = shoppingCartRepository.getShoppingCartByUserId(userId);
+        if(optionalShoppingCart.isPresent()){
+            return null;
+        }
         ShoppingCart shoppingCart = new ShoppingCart(userId);
         ShoppingCart savedShoppingCart = shoppingCartRepository.save(shoppingCart);
 
@@ -32,7 +36,7 @@ public class ShoppingCartService {
         return ShoppingCartResponse.builder()
                 .userId(shoppingCart.getUserId())
                 .createdAt(shoppingCart.getCreatedAt())
-                .cartItemList(shoppingCart.getCartItemList().stream().map(cartItemList -> cartItemService.mapToCartItemResponse(cartItemList)).toList())
+                .cartItemList(shoppingCart.getCartItemList().stream().map(cartItemService::mapToCartItemResponse).toList())
                 .build();
     }
 

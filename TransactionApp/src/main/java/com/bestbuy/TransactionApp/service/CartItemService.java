@@ -15,6 +15,7 @@ public class CartItemService {
         if(!stockService.canDecrementStock(productId,quantity).isPresent()){
             return null;
         }
+        stockService.decrementStock(productId,quantity);
         CartItem cartItem = CartItem.builder().quantity(quantity).productId(productId).build();
         return cartItemRepository.save(cartItem);
     }
