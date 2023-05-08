@@ -1,6 +1,7 @@
 package com.productsApp.products.controller;
 
 import com.productsApp.products.model.Product;
+import com.productsApp.products.queue.AuthSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class ProductsController {
 //    }
 
     private final ProductService productService;
+    private final AuthSender authSender;
 
     @PostMapping
     public ResponseEntity addProduct(@RequestBody Product product){
@@ -48,4 +50,11 @@ public class ProductsController {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/message")
+    public ResponseEntity testMQ(@RequestParam("message") String message){
+        authSender.sendMessage(message);
+        return ResponseEntity.ok("message sent to auth successfully");
+    }
+
 }
