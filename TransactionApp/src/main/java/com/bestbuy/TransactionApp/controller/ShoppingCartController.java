@@ -52,4 +52,18 @@ public class ShoppingCartController {
         return shoppingCartService.createCartItem(cartItemRequest.getProductId(), cartItemRequest.getQuantity(), cartItemRequest.getUserId());
     }
 
+    @DeleteMapping("/delete-cart-item/{cart_item_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public CartItemResponse deleteCartItem(@PathVariable ("cart_item_id") Long cartItemId){
+        log.info("Removed cart item: {}", cartItemId);
+        return shoppingCartService.deleteCartItem(cartItemId);
+    }
+
+    @PutMapping("/update-cart-item")
+    @ResponseStatus(HttpStatus.OK)
+    public CartItemResponse updateCartItem(@RequestBody CartItemRequest cartItemRequest){
+        log.info("Updated cart item: {}", cartItemRequest);
+        return shoppingCartService.updateCartItem(cartItemRequest.getId(),cartItemRequest.getQuantity());
+    }
+
 }
