@@ -1,7 +1,10 @@
 package com.productsApp.products.controller;
 
+import com.productsApp.products.DTO.AddProductToStockRequest;
+import com.productsApp.products.DTO.AuthRequest;
 import com.productsApp.products.model.Product;
 import com.productsApp.products.queue.AuthSender;
+import com.productsApp.products.queue.StockSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ public class ProductsController {
 
     private final ProductService productService;
     private final AuthSender authSender;
+    private final StockSender stockSender;
 
     @PostMapping
     public ResponseEntity addProduct(@RequestBody Product product){
@@ -51,10 +55,16 @@ public class ProductsController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/message")
-    public ResponseEntity testMQ(@RequestParam("message") String message){
-        authSender.sendMessage(message);
+    @PostMapping("/sendAuthRequest")
+    public ResponseEntity testMQ(){
+        authSender.sendAuthRequest(new AuthRequest("lhdfiusdgfjsd"));
         return ResponseEntity.ok("message sent to auth successfully");
+    }
+
+    @PostMapping("/sendAddProductToStockRequest")
+    public ResponseEntity testMQ2(){
+        stockSender.sendAddProductRequest(new AddProductToStockRequest("lhdfiusdgfjsd","id",20,1000));
+        return ResponseEntity.ok("message sent to stock successfully");
     }
 
 }

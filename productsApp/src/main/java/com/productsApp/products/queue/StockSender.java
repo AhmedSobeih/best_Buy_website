@@ -1,27 +1,28 @@
 package com.productsApp.products.queue;
 
-import com.productsApp.products.DTO.AuthRequest;
+import com.productsApp.products.DTO.AddProductToStockRequest;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthSender {
+public class StockSender {
+
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
-    @Value("${rabbitmq.queues.auth.routingKey}")
+    @Value("${rabbitmq.queues.stock.routingKey}")
     private String routingKey;
 
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public AuthSender(RabbitTemplate rabbitTemplate){
+    public StockSender(RabbitTemplate rabbitTemplate){
         this.rabbitTemplate=rabbitTemplate;
     }
 
-    public void sendAuthRequest(AuthRequest authRequest){
-        rabbitTemplate.convertAndSend(exchange,routingKey,authRequest);
+    public void sendAddProductRequest(AddProductToStockRequest addProductToStockRequest){
+        rabbitTemplate.convertAndSend(exchange,routingKey,addProductToStockRequest);
         System.out.printf("message sent %s %s",exchange,routingKey);
     }
 
