@@ -1,7 +1,6 @@
 package com.productsApp.products.controller;
 
-import com.productsApp.products.DTO.AddProductToStockRequest;
-import com.productsApp.products.DTO.AuthRequest;
+import com.productsApp.products.DTO.*;
 import com.productsApp.products.model.Product;
 import com.productsApp.products.queue.AuthSender;
 import com.productsApp.products.queue.StockSender;
@@ -18,29 +17,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductsController {
 
-//    @GetMapping(path = "/test")
-//    public String saveNewUser() {
-//        return "Hello";
-//    }
-
     private final ProductService productService;
     private final AuthSender authSender;
     private final StockSender stockSender;
 
     @PostMapping
-    public ResponseEntity addProduct(@RequestBody Product product){
-        productService.addProduct(product);
+    public ResponseEntity createProduct(@RequestBody ProductRequest productRequest){
+        productService.createProduct(productRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping
-    public ResponseEntity updateProduct(@RequestBody Product product){
-        productService.updateProduct(product);
+    public ResponseEntity updateProduct(@RequestBody ProductRUDRequest productRUDRequest){
+        productService.updateProduct(productRUDRequest);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts(){
+    public ResponseEntity<List<ProductResponse>> getAllProducts(){
         return ResponseEntity.ok(productService.getAllProducts());
     }
 

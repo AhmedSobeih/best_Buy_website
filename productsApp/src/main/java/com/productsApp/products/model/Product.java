@@ -1,9 +1,6 @@
 package com.productsApp.products.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,15 +12,18 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@Data
 @Document("products")
 public class Product {
     @Id
     private String id;
-    @Field(name="name")
-    @Indexed(unique = true)
+//    @Field(name="name")
+//    @Indexed(unique = true)
     private String productName;
-    @Field(name="price")
+//    @Field(name="price")
     private BigDecimal productPrice;
+    private String description;
 
     public String getId() {
         return id;
@@ -47,5 +47,13 @@ public class Product {
 
     public void setProductPrice(BigDecimal productPrice) {
         this.productPrice = productPrice;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
