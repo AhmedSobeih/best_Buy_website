@@ -21,9 +21,12 @@ public class ShoppingCartService {
     private final CartItemService cartItemService;
 
     public ShoppingCartResponse createShoppingCart(Long userId) {
+        Optional<ShoppingCart> optionalShoppingCart = shoppingCartRepository.getShoppingCartByUserId(userId);
+        if(optionalShoppingCart.isPresent()){
+            return null;
+        }
         ShoppingCart shoppingCart = new ShoppingCart(userId);
         ShoppingCart savedShoppingCart = shoppingCartRepository.save(shoppingCart);
-
         return mapToShoppingCartResponse(savedShoppingCart);
 
     }
@@ -32,7 +35,7 @@ public class ShoppingCartService {
         return ShoppingCartResponse.builder()
                 .userId(shoppingCart.getUserId())
                 .createdAt(shoppingCart.getCreatedAt())
-                .cartItemList(shoppingCart.getCartItemList().stream().map(cartItemList -> cartItemService.mapToCartItemResponse(cartItemList)).toList())
+                .cartItemList(shoppingCart.getCartItemList().stream().map(cartItemService::mapToCartItemResponse).toList())
                 .build();
     }
 
@@ -41,15 +44,36 @@ public class ShoppingCartService {
     }
 
     public void clearShoppingCart(Long userId){
-        shoppingCartRepository.getReferenceById(userId).getCartItemList().clear();
+        ShoppingCart shoppingCart = shoppingCartRepository.getReferenceById(userId);
+        shoppingCart.getCartItemList().clear();
+        shoppingCartRepository.save(shoppingCart);
+
     }
 
-    public CartItemResponse createCartItem(String prodcutId, Integer quantity, Long userId) {
-        CartItem cartItem = cartItemService.creatCartItem(prodcutId, quantity);
+    public CartItemResponse createCartItem(String productId, Integer quantity, Long userId) {
         ShoppingCart shoppingCart = shoppingCartRepository.getReferenceById(userId);
+        Long checkProductInCart = checkProductInCart(productId,shoppingCart);
+         if(checkProductInCart!=null){
+             return this.updateCartItem(checkProductInCart,quantity);
+         }
+        CartItem cartItem = cartItemService.creatCartItem(productId, quantity);
         shoppingCart.getCartItemList().add(cartItem);
         shoppingCartRepository.save(shoppingCart);
         return cartItemService.mapToCartItemResponse(cartItem);
+    }
+
+    public CartItemResponse updateCartItem(Long cartItemId, Integer quantity) {
+        CartItem cartItem = cartItemService.updateCartItemQuantity(cartItemId, quantity);
+        return cartItemService.mapToCartItemResponse(cartItem);
+    }
+
+    private Long checkProductInCart(String productId, ShoppingCart shoppingCart) {
+        for(CartItem cartItem: shoppingCart.getCartItemList()){
+            if(cartItem.getProductId().equals(productId)){
+                return cartItem.getId();
+            }
+        }
+        return null;
     }
 
     public List<ShoppingCartResponse> getAllShoppingCarts() {
@@ -62,6 +86,10 @@ public class ShoppingCartService {
         if(optionalShoppingCart.isPresent())
             return mapToShoppingCartResponse(optionalShoppingCart.get());
         else
-            throw new NoSuchElementException("Shopping Cart with id " + userId + "doesn't exist");
+            throw new NoSuchElementException("Shopping Cart with id " + userId + " doesn't exist");
+    }
+
+    public CartItemResponse deleteCartItem(Long cartItemId) {
+        return cartItemService.deleteCartItem(cartItemId);
     }
 }

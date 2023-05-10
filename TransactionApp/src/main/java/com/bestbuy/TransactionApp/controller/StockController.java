@@ -23,15 +23,29 @@ public class StockController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<StockResponse> getAllStocks(){
-        log.info("Sent all stocks");
+        log.info("Returned all stocks");
         return stockService.getAllStocks();
     }
 
     @GetMapping("/{product_id}")
     @ResponseStatus(HttpStatus.OK)
-    public StockResponse isInStock(@PathVariable("product_id") String productId){
+    public StockResponse getStockById(@PathVariable("product_id") String productId){
         log.info("Sent stock of product with id: {}", productId);
         return stockService.getStockById(productId);
+    }
+
+    @PutMapping ("/increment-stock")
+    @ResponseStatus(HttpStatus.OK)
+    public StockResponse incrementStockQuantity (@RequestBody  StockRequest stockRequest){
+
+        return stockService.incrementStock(stockRequest.getProductId(),stockRequest.getQuantity());
+    }
+
+    @PutMapping ("/decrement-stock")
+    @ResponseStatus(HttpStatus.OK)
+    public StockResponse decrementStockQuantity (@RequestBody  StockRequest stockRequest){
+        log.info("Sent stock of product with id: {}", stockRequest.getProductId());
+        return stockService.decrementStock(stockRequest.getProductId(),stockRequest.getQuantity());
     }
 
 

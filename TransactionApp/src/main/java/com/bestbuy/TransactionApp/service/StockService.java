@@ -14,23 +14,32 @@ import java.util.Optional;
 public class StockService {
     private final StockRepository stockRepository;
 
-    public Boolean decrementStock(String productId,Integer quantity){
+    public StockResponse decrementStock(String productId, Integer quantity) {
         Optional<Stock> stockOptional = canDecrementStock(productId, quantity);
-        if(!stockOptional.isPresent()){
-            return false;
+        if (!stockOptional.isPresent()) {
+            return null;
         }
         Stock stock = stockOptional.get();
+        stock.setQuantity(stock.getQuantity() - quantity);
+        stockRepository.save(stock);
+        return mapToStockResponse(stock);
+    }
 
-        stock.setQuantity(stock.getQuantity()-quantity);
-        if(stock.getQuantity()==0){
-            stockRepository.deleteById(stock.getProductId());
+    public StockResponse incrementStock(String productId, Integer quantity) {
+        Optional<Stock> optionalStock = getStockByProductId(productId);
+        System.out.println(optionalStock.get());
+        if (optionalStock.isEmpty()) {
+            return null;
         }
-        return true;
+        Stock stock = optionalStock.get();
+        stock.setQuantity(stock.getQuantity() + quantity);
+        stockRepository.save(stock);
+        return mapToStockResponse(stock);
     }
 
     public Optional<Stock> canDecrementStock(String productId, Integer quantity) {
-        Optional<Stock> stock = stockRepository.getStockByProductId(productId);
-        if(stock.isPresent()) {
+        Optional<Stock> stock = getStockByProductId(productId);
+        if (stock.isPresent()) {
             if (stock.get().getQuantity() >= quantity) {
                 return stock;
             }
@@ -39,18 +48,29 @@ public class StockService {
         return Optional.empty();
     }
 
+    public Optional<Stock> getStockByProductId(String productId) {
+        Optional<Stock> stock = stockRepository.getStockByProductId(productId);
+        return stock;
+    }
+
+    public Boolean inStock(String productId) {
+        Optional<Stock> stock = getStockByProductId(productId);
+        return stock.isPresent() && stock.get().getQuantity() > 0;
+    }
+
     public StockResponse createStock(String productId, Double price, Integer quantity) {
         Stock stock = new Stock(productId, price, quantity);
         stockRepository.save(stock);
         return mapToStockResponse(stock);
     }
+
     public List<StockResponse> getAllStocks() {
         List<Stock> stocks = stockRepository.findAll();
-        return stocks.stream().map(stock->mapToStockResponse(stock)).toList();
+        return stocks.stream().map(this::mapToStockResponse).toList();
     }
 
     public StockResponse getStockById(String productId) {
-         return mapToStockResponse(stockRepository.getStockByProductId(productId).get());
+        return mapToStockResponse(stockRepository.getStockByProductId(productId).get());
     }
 
     private StockResponse mapToStockResponse(Stock stock) {
