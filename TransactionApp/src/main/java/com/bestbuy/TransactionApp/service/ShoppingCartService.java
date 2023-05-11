@@ -57,7 +57,7 @@ public class ShoppingCartService{
          if(checkProductInCart!=null){
              return this.updateCartItem(userId,checkProductInCart,quantity);
          }
-        CartItem cartItem = cartItemService.creatCartItem(productId, quantity);
+        CartItem cartItem = cartItemService.createCartItem(productId, quantity);
         shoppingCart.getCartItemList().add(cartItem);
         shoppingCartRepository.save(shoppingCart);
         return cartItemService.mapToCartItemResponse(cartItem);

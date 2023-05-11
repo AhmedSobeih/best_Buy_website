@@ -1,6 +1,7 @@
 package com.bestbuy.TransactionApp.service;
 
 import com.bestbuy.TransactionApp.dto.StockResponse;
+import com.bestbuy.TransactionApp.exception.StockExceptionSupplier;
 import com.bestbuy.TransactionApp.model.Stock;
 import com.bestbuy.TransactionApp.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,52 +14,47 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StockService {
     private final StockRepository stockRepository;
+    private final StockExceptionSupplier stockExceptionSupplier;
 
     public StockResponse decrementStock(String productId, Integer quantity) {
-        Optional<Stock> stockOptional = canDecrementStock(productId, quantity);
-        if (!stockOptional.isPresent()) {
-            return null;
-        }
-        Stock stock = stockOptional.get();
+        Stock stock = canDecrementStockOrThrow(productId, quantity);
         stock.setQuantity(stock.getQuantity() - quantity);
         stockRepository.save(stock);
         return mapToStockResponse(stock);
     }
 
     public StockResponse incrementStock(String productId, Integer quantity) {
-        Optional<Stock> optionalStock = getStockByProductId(productId);
-        System.out.println(optionalStock.get());
-        if (optionalStock.isEmpty()) {
-            return null;
-        }
-        Stock stock = optionalStock.get();
+        Stock stock = getStockByProductId(productId);
+        if(quantity == null || quantity <= 0)
+            throw stockExceptionSupplier.invalidIncrementAmount(quantity);
         stock.setQuantity(stock.getQuantity() + quantity);
         stockRepository.save(stock);
         return mapToStockResponse(stock);
     }
 
-    public Optional<Stock> canDecrementStock(String productId, Integer quantity) {
-        Optional<Stock> stock = getStockByProductId(productId);
-        if (stock.isPresent()) {
-            if (stock.get().getQuantity() >= quantity) {
+    // returns the stock if it can be decremented, otherwise throws
+    public Stock canDecrementStockOrThrow(String productId, Integer quantity) {
+        Stock stock = getStockByProductId(productId);
+        if(quantity == null || quantity <= 0)
+            throw stockExceptionSupplier.invalidDecrementAmount(quantity);
+        if (stock.getQuantity() >= quantity)
                 return stock;
-            }
-            return Optional.empty();
-        }
-        return Optional.empty();
+        else
+            throw stockExceptionSupplier.cannotDecrement(productId);
     }
 
-    public Optional<Stock> getStockByProductId(String productId) {
-        Optional<Stock> stock = stockRepository.getStockByProductId(productId);
-        return stock;
+    public Stock getStockByProductId(String productId) {
+        return stockRepository.getStockByProductId(productId).orElseThrow(stockExceptionSupplier.notFound(productId));
     }
 
     public Boolean inStock(String productId) {
-        Optional<Stock> stock = getStockByProductId(productId);
+        Optional<Stock> stock = stockRepository.getStockByProductId(productId);
         return stock.isPresent() && stock.get().getQuantity() > 0;
     }
 
     public StockResponse createStock(String productId, Double price, Integer quantity) {
+        if(stockRepository.existsById(productId))   // we can choose to increment amount instead
+            throw stockExceptionSupplier.alreadyExists(productId);
         Stock stock = new Stock(productId, price, quantity);
         stockRepository.save(stock);
         return mapToStockResponse(stock);
@@ -70,8 +66,9 @@ public class StockService {
     }
 
     public StockResponse getStockById(String productId) {
-        return mapToStockResponse(stockRepository.getStockByProductId(productId).get());
+        return mapToStockResponse(stockRepository.getStockByProductId(productId).orElseThrow(stockExceptionSupplier.notFound(productId)));
     }
+
 
     private StockResponse mapToStockResponse(Stock stock) {
         return StockResponse.builder()

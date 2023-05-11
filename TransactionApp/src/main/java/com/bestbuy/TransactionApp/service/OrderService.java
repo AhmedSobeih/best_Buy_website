@@ -5,7 +5,6 @@ import com.bestbuy.TransactionApp.dto.ShoppingCartResponse;
 import com.bestbuy.TransactionApp.model.Order;
 import com.bestbuy.TransactionApp.model.OrderItem;
 import com.bestbuy.TransactionApp.model.OrderStatus;
-import com.bestbuy.TransactionApp.model.ShoppingCart;
 import com.bestbuy.TransactionApp.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,11 +34,9 @@ public class OrderService {
     }
 
     private boolean updateStock(List<OrderItem> orderItemList) {
-        for(OrderItem orderItem:orderItemList){
-            if(stockService.canDecrementStock(orderItem.getProductId(),orderItem.getQuantity()).isEmpty()){
-                return false;
-            }
-        }
+        for(OrderItem orderItem:orderItemList)
+            stockService.canDecrementStockOrThrow(orderItem.getProductId(),orderItem.getQuantity());
+
         orderItemList.stream().map(orderItem -> stockService.decrementStock(orderItem.getProductId(),orderItem.getQuantity()));
         return true;
     }
