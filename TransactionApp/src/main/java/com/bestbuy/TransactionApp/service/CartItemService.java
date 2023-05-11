@@ -35,13 +35,12 @@ public class CartItemService {
         return CartItemResponse.builder().id(cartItemId).build();
     }
 
-    public CartItem updateCartItemQuantity(Long cartItemId, Integer quantity) {
-        CartItem cartItem = cartItemRepository.getReferenceById(cartItemId);
-        cartItem.setQuantity(cartItem.getQuantity()+quantity);
-        if(cartItem.getQuantity()<=0){
-            cartItemRepository.deleteById(cartItemId);
-            return cartItem;
-        }
+
+    public CartItem getCartItemById(Long cartItemId) {
+        return cartItemRepository.getReferenceById(cartItemId);
+    }
+
+    public CartItem updateCartItem(CartItem cartItem) {
         return cartItemRepository.save(cartItem);
     }
 }

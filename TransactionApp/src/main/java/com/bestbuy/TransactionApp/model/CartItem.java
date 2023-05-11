@@ -12,7 +12,7 @@ import org.hibernate.annotations.ManyToAny;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartItem {
+public class CartItem  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

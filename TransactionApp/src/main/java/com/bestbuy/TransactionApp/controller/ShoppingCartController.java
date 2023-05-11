@@ -52,18 +52,18 @@ public class ShoppingCartController {
         return shoppingCartService.createCartItem(cartItemRequest.getProductId(), cartItemRequest.getQuantity(), cartItemRequest.getUserId());
     }
 
-    @DeleteMapping("/delete-cart-item/{cart_item_id}")
+    @DeleteMapping("/delete-cart-item/{cart_item_id,user_id}")
     @ResponseStatus(HttpStatus.OK)
-    public CartItemResponse deleteCartItem(@PathVariable ("cart_item_id") Long cartItemId){
+    public CartItemResponse deleteCartItem(@PathVariable ("cart_item_id") Long cartItemId,@PathVariable ("user_id") Long userId){
         log.info("Removed cart item: {}", cartItemId);
-        return shoppingCartService.deleteCartItem(cartItemId);
+        return shoppingCartService.deleteCartItem(cartItemId,userId);
     }
 
     @PutMapping("/update-cart-item")
     @ResponseStatus(HttpStatus.OK)
     public CartItemResponse updateCartItem(@RequestBody CartItemRequest cartItemRequest){
         log.info("Updated cart item: {}", cartItemRequest);
-        return shoppingCartService.updateCartItem(cartItemRequest.getId(),cartItemRequest.getQuantity());
+        return shoppingCartService.updateCartItem(cartItemRequest.getUserId(),cartItemRequest.getId(),cartItemRequest.getQuantity());
     }
 
 }
