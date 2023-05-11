@@ -18,7 +18,6 @@ public class ReviewRequest {
     private String model;
     private String userID;
     private String comment;
-    private String transactionID;
     private Long likes;
     private Long dislikes;
     private double rating;

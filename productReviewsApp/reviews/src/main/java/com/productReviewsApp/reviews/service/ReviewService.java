@@ -5,6 +5,7 @@ import com.productReviewsApp.reviews.dto.ReviewResponce;
 import com.productReviewsApp.reviews.model.Review;
 import com.productReviewsApp.reviews.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,6 @@ public class ReviewService {
                 .likes(reviewRequest.getLikes())
                 .rating(reviewRequest.getRating())
                 .model(reviewRequest.getModel())
-                .transactionID(reviewRequest.getTransactionID())
                 .userID(reviewRequest.getUserID())
                 .build();
 
@@ -46,8 +46,66 @@ public class ReviewService {
                 .likes(review.getLikes())
                 .rating(review.getRating())
                 .model(review.getModel())
-                .transactionID(review.getTransactionID())
                 .userID(review.getUserID())
                 .build();
+    }
+
+    public Review findReviewById(String id) {
+        return reviewRepository.findById(id).orElseThrow(() -> new RuntimeException(
+                String.format("Cannot find a review by ID: %s", id)
+        ));
+    }
+    public void deleteReview(String id){
+        reviewRepository.deleteById(id);
+    }
+
+    public void updateReview(Review review){
+        Review savedReview = reviewRepository.findById(review.getId())
+                .orElseThrow(() -> new RuntimeException(
+                        String.format("Cannot find a review by ID %s", review.getId())
+                ));
+        savedReview.setModel(review.getModel());
+        savedReview.setUserID(review.getUserID());
+        savedReview.setComment(review.getComment());
+        savedReview.setLikes(review.getLikes());
+        savedReview.setDislikes(review.getDislikes());
+        savedReview.setRating(review.getRating());
+
+        reviewRepository.save(savedReview);
+
+    }
+
+    public void updateReviewLikes(String id){
+        Review savedReview = reviewRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(
+                        String.format("Cannot find a review by ID %s", id)
+                ));
+        Long newLikes = savedReview.getLikes()+1;
+        double newRating = calculateRatingOutOfFive(newLikes,savedReview.getDislikes());
+        savedReview.setLikes(newLikes);
+        savedReview.setRating(newRating);
+
+        reviewRepository.save(savedReview);
+    }
+
+    public void updateReviewDislikes(String id){
+        Review savedReview = reviewRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(
+                        String.format("Cannot find a review by ID %s", id)
+                ));
+        Long newDislikes = savedReview.getDislikes()+1;
+        double newRating = calculateRatingOutOfFive(savedReview.getLikes(),newDislikes);
+        savedReview.setDislikes(newDislikes);
+        savedReview.setRating(newRating);
+
+        reviewRepository.save(savedReview);
+    }
+
+    private double calculateRatingOutOfFive(double likes, double dislikes){
+        double rating = (likes/(likes+dislikes))*5;
+        rating*=10;
+        rating=Math.floor(rating);
+        rating/=10;
+        return rating;
     }
 }

@@ -22,13 +22,64 @@ public class Review {
     private String model;
     private String userID;
     private String comment;
-    private String transactionID;
     private Long likes;
     private Long dislikes;
     private double rating;
     private Date date;
 
+    public String getModel() {
+        return model;
+    }
 
+    public void setModel(String model) {
+        this.model = model;
+    }
 
+    public String getUserID() {
+        return userID;
+    }
 
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Long getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Long likes) {
+        this.likes = likes;
+    }
+
+    public Long getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(Long dislikes) {
+        this.dislikes = dislikes;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }
