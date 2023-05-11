@@ -52,7 +52,7 @@ public class ShoppingCartController {
         return shoppingCartService.createCartItem(cartItemRequest.getProductId(), cartItemRequest.getQuantity(), cartItemRequest.getUserId());
     }
 
-    @DeleteMapping("/delete-cart-item/{cart_item_id,user_id}")
+    @DeleteMapping("/delete-cart-item/{user_id}/{cart_item_id}")
     @ResponseStatus(HttpStatus.OK)
     public CartItemResponse deleteCartItem(@PathVariable ("cart_item_id") Long cartItemId,@PathVariable ("user_id") Long userId){
         log.info("Removed cart item: {}", cartItemId);
