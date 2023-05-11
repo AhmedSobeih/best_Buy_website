@@ -31,21 +31,25 @@ public class StockController {
     @ResponseStatus(HttpStatus.OK)
     public StockResponse getStockById(@PathVariable("product_id") String productId){
         log.info("Sent stock of product with id: {}", productId);
-        return stockService.getStockById(productId);
+        return stockService.getStockResponseById(productId);
     }
 
     @PutMapping ("/increment-stock")
     @ResponseStatus(HttpStatus.OK)
     public StockResponse incrementStockQuantity (@RequestBody  StockRequest stockRequest){
-
         return stockService.incrementStock(stockRequest.getProductId(),stockRequest.getQuantity());
     }
 
     @PutMapping ("/decrement-stock")
     @ResponseStatus(HttpStatus.OK)
     public StockResponse decrementStockQuantity (@RequestBody  StockRequest stockRequest){
-        log.info("Sent stock of product with id: {}", stockRequest.getProductId());
         return stockService.decrementStock(stockRequest.getProductId(),stockRequest.getQuantity());
+    }
+
+    @PutMapping ("/")
+    @ResponseStatus(HttpStatus.OK)
+    public StockResponse updateStock (@RequestBody  StockRequest stockRequest){
+        return stockService.updateStock(stockRequest);
     }
 
 

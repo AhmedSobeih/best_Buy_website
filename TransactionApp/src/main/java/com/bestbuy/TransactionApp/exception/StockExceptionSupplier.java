@@ -28,4 +28,13 @@ public class StockExceptionSupplier {
         String msg = quantity == null? "Attribute quantity missing":("Invalid increment amount: "+quantity);
         return new ApiBadRequestException(msg);
     }
+
+    public ApiRequestException invalidPrice() {
+        return new ApiBadRequestException("Price should be > 0");
+    }
+
+    public ApiRequestException invalidQuantity() {
+        return new ApiBadRequestException("Quantity should be >= 0");
+    }
+
 }
