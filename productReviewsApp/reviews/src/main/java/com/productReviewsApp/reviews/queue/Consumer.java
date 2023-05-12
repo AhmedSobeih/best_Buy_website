@@ -1,0 +1,14 @@
+package com.productReviewsApp.reviews.queue;
+
+import com.productsApp.products.DTO.Request;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Service;
+
+@Service
+public class Consumer {
+
+    @RabbitListener(queues = {"${rabbitmq.queues.review.name}"})
+    public void consumeMessage2(Request reviewRequest){
+        System.out.printf("Read auth request %s",reviewRequest.toString());
+    }
+}
