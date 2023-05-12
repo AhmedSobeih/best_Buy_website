@@ -1,6 +1,5 @@
 package com.bestbuy.TransactionApp.dto;
 
-import com.bestbuy.TransactionApp.model.Order;
 import com.bestbuy.TransactionApp.model.OrderItem;
 import lombok.Builder;
 import lombok.Data;

@@ -3,7 +3,6 @@ package com.bestbuy.TransactionApp.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
-import org.hibernate.annotations.ManyToAny;
 
 @Table(name = "cart_item")
 @Entity
