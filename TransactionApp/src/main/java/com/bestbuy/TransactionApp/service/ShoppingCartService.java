@@ -3,6 +3,7 @@ package com.bestbuy.TransactionApp.service;
 import com.bestbuy.TransactionApp.dto.CartItemResponse;
 import com.bestbuy.TransactionApp.dto.ShoppingCartResponse;
 import com.bestbuy.TransactionApp.exception.CartExceptionSupplier;
+import com.bestbuy.TransactionApp.exception.CartItemExceptionSupplier;
 import com.bestbuy.TransactionApp.model.CartItem;
 import com.bestbuy.TransactionApp.model.ShoppingCart;
 import com.bestbuy.TransactionApp.repository.ShoppingCartRepository;
@@ -18,6 +19,7 @@ public class ShoppingCartService{
     private final ShoppingCartRepository shoppingCartRepository;
     private final CartItemService cartItemService;
     private final CartExceptionSupplier cartExceptionSupplier;
+    private final CartItemExceptionSupplier cartItemExceptionSupplier;
 
     public ShoppingCartResponse createShoppingCart(Long userId) {
         if(shoppingCartRepository.existsById(userId))
@@ -101,9 +103,12 @@ public class ShoppingCartService{
                 break;
             }
         }
+        if(index == -1)
+            throw cartItemExceptionSupplier.notFound(cartItemId);
         shoppingCart.getCartItemList().remove(index);
+        CartItemResponse cartItemResponse = cartItemService.getCartItemResponseById(cartItemId);
         shoppingCartRepository.save(shoppingCart);
-        return cartItemService.deleteCartItem(cartItemId);
+        return cartItemResponse;
     }
 
 }

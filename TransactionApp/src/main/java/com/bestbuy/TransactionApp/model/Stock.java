@@ -15,6 +15,7 @@ public class Stock {
     @Id
     @Column(name = "product_id",nullable = false)
     private String productId;
+    @Check(constraints = "price>0")
     private Double price;
     @Column(columnDefinition = "int default 1")
     @Check(constraints = "quantity>=0")

@@ -98,4 +98,7 @@ public class StockService {
                 .build();
     }
 
+    public Double getPriceOfProduct(String productId) {
+        return getStockByProductId(productId).getPrice();
+    }
 }

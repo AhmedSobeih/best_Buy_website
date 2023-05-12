@@ -43,4 +43,8 @@ public class CartItemService {
                 .id(cartItem.getId())
                 .build();
     }
+
+    public CartItemResponse getCartItemResponseById(Long cartItemId) {
+        return mapToCartItemResponse(getCartItemById(cartItemId));
+    }
 }

@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,7 +30,8 @@ public class OrderService {
         ShoppingCart shoppingCart = shoppingCartService.getShoppingCart(userId);
         List<OrderItem> orderItemList = createOrderItems(shoppingCart);
         if(updateStock(orderItemList)) {
-            Order order = Order.builder().orderItemList(orderItemList).userId(userId).status(OrderStatus.PLACED).build();
+            Order order = Order.builder().orderItemList(orderItemList).userId(userId).status(OrderStatus.PLACED)
+                    .createdAt(LocalDateTime.now()).build();
             orderRepository.save(order);
             shoppingCartService.clearShoppingCart(userId);
             return mapOrder(order);
@@ -55,9 +57,10 @@ public class OrderService {
     }
 
     public OrderItem buildOrderItem(CartItem cartItem){
-        return OrderItem.builder().
-                productId(cartItem.getProductId())
-                .quantity(cartItem.getQuantity()).build();
+        return OrderItem.builder()
+                .productId(cartItem.getProductId())
+                .quantity(cartItem.getQuantity())
+                .price(stockService.getPriceOfProduct(cartItem.getProductId())).build();
     }
 
     public List<OrderResponse> getAllOrders() {

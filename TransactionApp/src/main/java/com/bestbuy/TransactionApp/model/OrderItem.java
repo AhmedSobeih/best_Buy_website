@@ -19,4 +19,6 @@ public class OrderItem {
     @Column(columnDefinition = "int default 1")
     @Check(constraints = "quantity>0")
     private Integer quantity;
+    @Check(constraints = "price>0")
+    private Double price;
 }
