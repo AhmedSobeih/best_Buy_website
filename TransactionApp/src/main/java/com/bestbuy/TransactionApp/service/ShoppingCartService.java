@@ -9,8 +9,6 @@ import com.bestbuy.TransactionApp.repository.ShoppingCartRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -22,10 +20,8 @@ public class ShoppingCartService{
     private final CartExceptionSupplier cartExceptionSupplier;
 
     public ShoppingCartResponse createShoppingCart(Long userId) {
-        Optional<ShoppingCart> optionalShoppingCart = shoppingCartRepository.getShoppingCartByUserId(userId);
-        if(optionalShoppingCart.isPresent()){
-            return null;
-        }
+        if(shoppingCartRepository.existsById(userId))
+            throw cartExceptionSupplier.alreadyExists(userId);
         ShoppingCart shoppingCart = new ShoppingCart(userId);
         ShoppingCart savedShoppingCart = shoppingCartRepository.save(shoppingCart);
         return mapToShoppingCartResponse(savedShoppingCart);
@@ -44,19 +40,19 @@ public class ShoppingCartService{
         return getShoppingCart(userId).getCartItemList().size() == 0;
     }
 
-    public void clearShoppingCart(Long userId){
-        ShoppingCart shoppingCart = shoppingCartRepository.getReferenceById(userId);
+    public ShoppingCartResponse clearShoppingCart(Long userId){
+        ShoppingCart shoppingCart = getShoppingCart(userId);
         shoppingCart.getCartItemList().clear();
-        shoppingCartRepository.save(shoppingCart);
+        return mapToShoppingCartResponse(shoppingCartRepository.save(shoppingCart));
     }
 
 
 
     public CartItemResponse createCartItem(String productId, Integer quantity, Long userId) {
-        ShoppingCart shoppingCart = shoppingCartRepository.getReferenceById(userId);
-        Long checkProductInCart = checkProductInCart(productId,shoppingCart);
-         if(checkProductInCart!=null){
-             return this.updateCartItem(userId,checkProductInCart,quantity);
+        ShoppingCart shoppingCart = getShoppingCart(userId);
+        Long cartItemId = getCartItemId(productId,shoppingCart);
+         if(cartItemId!=null){
+             return this.updateCartItem(userId,cartItemId,quantity);
          }
         CartItem cartItem = cartItemService.createCartItem(productId, quantity);
         shoppingCart.getCartItemList().add(cartItem);
@@ -74,12 +70,11 @@ public class ShoppingCartService{
         return cartItemService.mapToCartItemResponse(cartItemService.updateCartItem(cartItem));
     }
 
-    private Long checkProductInCart(String productId, ShoppingCart shoppingCart) {
-        for(CartItem cartItem: shoppingCart.getCartItemList()){
-            if(cartItem.getProductId().equals(productId)){
+    private Long getCartItemId(String productId, ShoppingCart shoppingCart) {
+        for(CartItem cartItem: shoppingCart.getCartItemList())
+            if(cartItem.getProductId().equals(productId))
                 return cartItem.getId();
-            }
-        }
+
         return null;
     }
 
@@ -98,7 +93,7 @@ public class ShoppingCartService{
     }
 
     public CartItemResponse deleteCartItem(Long cartItemId,Long userId ) {
-        ShoppingCart shoppingCart = shoppingCartRepository.getReferenceById(userId);
+        ShoppingCart shoppingCart = getShoppingCart(userId);
         int index = -1;
         for(CartItem cartItem:shoppingCart.getCartItemList()){
             if(cartItem.getId()==cartItemId){

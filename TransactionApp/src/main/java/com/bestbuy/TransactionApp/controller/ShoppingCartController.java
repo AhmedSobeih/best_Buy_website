@@ -46,6 +46,13 @@ public class ShoppingCartController {
         return shoppingCartService.createShoppingCart(userId);
     }
 
+    @PostMapping("/clear/{user_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ShoppingCartResponse clearShoppingCart(@PathVariable("user_id") Long userId){
+        logger.info("Cleared shopping cart for user: {}", userId);
+        return shoppingCartService.clearShoppingCart(userId);
+    }
+
     @PostMapping("/add-cart-item")
     @ResponseStatus(HttpStatus.CREATED)
     public CartItemResponse createCartItem(@RequestBody CartItemRequest cartItemRequest){
