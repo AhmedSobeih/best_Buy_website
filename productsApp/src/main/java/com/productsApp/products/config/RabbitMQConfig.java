@@ -21,12 +21,16 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queues.stock.name}")
     private String stockQueueName;
 
+    @Value("${rabbitmq.queues.review.name}")
+    private String reviewQueueName;
     @Value("${rabbitmq.queues.auth.routingKey}")
     private String authRoutingKey;
 
     @Value("${rabbitmq.queues.stock.routingKey}")
     private String stockRoutingKey;
 
+    @Value("${rabbitmq.queues.review.routingKey}")
+    private String reviewRoutingKey;
     @Bean
     public Queue authQueue(){
         return new Queue(authQueueName);
@@ -37,6 +41,10 @@ public class RabbitMQConfig {
         return new Queue(stockQueueName);
     }
 
+    @Bean
+    public Queue reviewQueue(){
+        return new Queue(reviewQueueName);
+    }
     @Bean
     public TopicExchange exchange(){
         return new TopicExchange(exchange);
@@ -50,6 +58,11 @@ public class RabbitMQConfig {
     @Bean
     public Binding stockBinding(){
         return BindingBuilder.bind(stockQueue()).to(exchange()).with(stockRoutingKey);
+    }
+
+    @Bean
+    public Binding reviewBinding(){
+        return BindingBuilder.bind(reviewQueue()).to(exchange()).with(reviewRoutingKey);
     }
 
     @Bean

@@ -5,6 +5,7 @@ import com.productsApp.products.commands.AuthenticateCommand;
 import com.productsApp.products.commands.Command;
 import com.productsApp.products.model.Product;
 import com.productsApp.products.queue.AuthSender;
+import com.productsApp.products.queue.ReviewSender;
 import com.productsApp.products.queue.StockSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,9 @@ public class ProductsController {
     private final ProductService productService;
     private final AuthenticateCommand authenticateCommand;
     private final StockSender stockSender;
+
+    private final ReviewSender reviewSender;
+
 
     @PostMapping
     public ResponseEntity createProduct(@RequestBody ProductRequest productRequest){
@@ -62,6 +66,12 @@ public class ProductsController {
     public ResponseEntity testMQ2(){
         stockSender.sendAddProductRequest(new AddProductToStockRequest("lhdfiusdgfjsd","id",20,1000));
         return ResponseEntity.ok("message sent to stock successfully");
+    }
+
+    @PostMapping("/sendReviewRequest")
+    public ResponseEntity testMQ3(){
+        reviewSender.sendAddReviewRequest(new ReviewRequest("lhdfiusdgfjsd","id"));
+        return ResponseEntity.ok("review sent to product successfully");
     }
 
 }

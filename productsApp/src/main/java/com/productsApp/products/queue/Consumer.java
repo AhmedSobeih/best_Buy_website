@@ -12,4 +12,9 @@ public class Consumer {
     public void consumeMessage(Request authRequest){
         System.out.printf("Read auth request %s",authRequest.toString());
     }
+
+    @RabbitListener(queues = {"${rabbitmq.queues.review.name}"})
+    public void consumeMessage2(Request reviewRequest){
+        System.out.printf("Read auth request %s",reviewRequest.toString());
+    }
 }
