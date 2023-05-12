@@ -9,4 +9,5 @@
     b. Extract the zip file  
     c. In the extracted folder you will find `redis-server.exe`, run this executable   
     d. Go to file `./src/main/resources/application.propertires` and edit the redis configuration values to match the running redis server  
-3. In the application root directory, run `./build_and_run.bat` script to run the application connecting to both postgres database and redis cache servers
+3. In the application root directory, run `./build_and_run.bat` script to run the application connecting to both postgres database and redis cache servers  
+4. Go to `http://localhost:8091/swagger-ui/index.html` to use the app swagger   
