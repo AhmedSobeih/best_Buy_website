@@ -8,6 +8,8 @@ import com.productsApp.products.queue.AuthSender;
 import com.productsApp.products.queue.ReviewSender;
 import com.productsApp.products.queue.StockSender;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,31 +30,34 @@ public class ProductsController {
 
 
     @PostMapping
-    public ResponseEntity createProduct(@RequestBody ProductRequest productRequest){
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createProduct(@RequestBody ProductRequest productRequest){
         productService.createProduct(productRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-
     @PutMapping
-    public ResponseEntity updateProduct(@RequestBody ProductRUDRequest productRUDRequest){
+    @ResponseStatus(HttpStatus.OK)
+    public void updateProduct(@RequestBody ProductRUDRequest productRUDRequest){
         productService.updateProduct(productRUDRequest);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts(){
-        return ResponseEntity.ok(productService.getAllProducts());
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> getAllProducts(){
+        return productService.getAllProducts();
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<Product> getProductByName(@PathVariable String name){
-        return ResponseEntity.ok(productService.getProductByName(name));
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Cacheable(key = "#id",value = "Product")
+    public ProductResponse getProductId(@PathVariable String id){
+        return productService.getProductById(id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteProduct(@PathVariable String id){
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(key = "#id",value = "Product")
+    public void deleteProduct(@PathVariable String id){
         productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/sendAuthRequest")
