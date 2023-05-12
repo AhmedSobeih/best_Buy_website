@@ -1,9 +1,9 @@
 ## To run the transactions app you need to do the following:
 1. Run the postgres database:  
     a. login to postgress with your username and password (if prompted) using: `psql -h localhost -p 5432 -U <superuser>`
-    b. Create the database using "CREATE DATABASE transactions"
-    c. Create database user using "CREATE USER postgres WITH PASSWORD 'password'"
-    d. Give user access to the created database "GRANT ALL PRIVILEGES ON DATABASE transactions TO postgres"
+    b. Create the database using `CREATE DATABASE transactions;`
+    c. Create database user using `CREATE USER postgres WITH PASSWORD 'password';`
+    d. Give user access to the created database `GRANT ALL PRIVILEGES ON DATABASE transactions TO postgres;`
 2. Run the Redis server  
     a. Download redis zip file from this link https://github.com/microsoftarchive/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.zip  
     b. Extract the zip file  
