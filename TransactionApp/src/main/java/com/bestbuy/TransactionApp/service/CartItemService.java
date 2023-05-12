@@ -6,18 +6,13 @@ import com.bestbuy.TransactionApp.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class CartItemService {
     private final CartItemRepository cartItemRepository;
     private final StockService stockService;
-    public CartItem creatCartItem(String productId,Integer quantity){
-        if(stockService.canDecrementStock(productId,quantity).isEmpty()){
-            return null;
-        }
+    public CartItem createCartItem(String productId, Integer quantity){
+        stockService.canDecrementStockOrThrow(productId,quantity); // throws if no enough stock
         CartItem cartItem = CartItem.builder().quantity(quantity).productId(productId).build();
         return cartItemRepository.save(cartItem);
     }
@@ -35,13 +30,12 @@ public class CartItemService {
         return CartItemResponse.builder().id(cartItemId).build();
     }
 
-    public CartItem updateCartItemQuantity(Long cartItemId, Integer quantity) {
-        CartItem cartItem = cartItemRepository.getReferenceById(cartItemId);
-        cartItem.setQuantity(cartItem.getQuantity()+quantity);
-        if(cartItem.getQuantity()<=0){
-            cartItemRepository.deleteById(cartItemId);
-            return cartItem;
-        }
+
+    public CartItem getCartItemById(Long cartItemId) {
+        return cartItemRepository.getReferenceById(cartItemId);
+    }
+
+    public CartItem updateCartItem(CartItem cartItem) {
         return cartItemRepository.save(cartItem);
     }
 }

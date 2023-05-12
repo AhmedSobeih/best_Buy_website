@@ -3,7 +3,6 @@ package com.bestbuy.TransactionApp.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
-import org.hibernate.annotations.ManyToAny;
 
 @Table(name = "cart_item")
 @Entity
@@ -12,7 +11,7 @@ import org.hibernate.annotations.ManyToAny;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartItem {
+public class CartItem  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

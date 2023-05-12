@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ShoppingCartService {
+public class ShoppingCartService{
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final CartItemService cartItemService;
@@ -47,24 +47,30 @@ public class ShoppingCartService {
         ShoppingCart shoppingCart = shoppingCartRepository.getReferenceById(userId);
         shoppingCart.getCartItemList().clear();
         shoppingCartRepository.save(shoppingCart);
-
     }
+
+
 
     public CartItemResponse createCartItem(String productId, Integer quantity, Long userId) {
         ShoppingCart shoppingCart = shoppingCartRepository.getReferenceById(userId);
         Long checkProductInCart = checkProductInCart(productId,shoppingCart);
          if(checkProductInCart!=null){
-             return this.updateCartItem(checkProductInCart,quantity);
+             return this.updateCartItem(userId,checkProductInCart,quantity);
          }
-        CartItem cartItem = cartItemService.creatCartItem(productId, quantity);
+        CartItem cartItem = cartItemService.createCartItem(productId, quantity);
         shoppingCart.getCartItemList().add(cartItem);
         shoppingCartRepository.save(shoppingCart);
         return cartItemService.mapToCartItemResponse(cartItem);
     }
 
-    public CartItemResponse updateCartItem(Long cartItemId, Integer quantity) {
-        CartItem cartItem = cartItemService.updateCartItemQuantity(cartItemId, quantity);
-        return cartItemService.mapToCartItemResponse(cartItem);
+    public CartItemResponse updateCartItem(Long userId,Long cartItemId, Integer quantity) {
+        CartItem cartItem = cartItemService.getCartItemById(cartItemId);
+        cartItem.setQuantity(cartItem.getQuantity()+quantity);
+        if(cartItem.getQuantity()<=0){
+            this.deleteCartItem(cartItemId,userId);
+            return cartItemService.mapToCartItemResponse(cartItem);
+        }
+        return cartItemService.mapToCartItemResponse(cartItemService.updateCartItem(cartItem));
     }
 
     private Long checkProductInCart(String productId, ShoppingCart shoppingCart) {
@@ -89,7 +95,18 @@ public class ShoppingCartService {
             throw new NoSuchElementException("Shopping Cart with id " + userId + " doesn't exist");
     }
 
-    public CartItemResponse deleteCartItem(Long cartItemId) {
+    public CartItemResponse deleteCartItem(Long cartItemId,Long userId ) {
+        ShoppingCart shoppingCart = shoppingCartRepository.getReferenceById(userId);
+        int index = -1;
+        for(CartItem cartItem:shoppingCart.getCartItemList()){
+            if(cartItem.getId()==cartItemId){
+                index = shoppingCart.getCartItemList().indexOf(cartItem);
+                break;
+            }
+        }
+        shoppingCart.getCartItemList().remove(index);
+        shoppingCartRepository.save(shoppingCart);
         return cartItemService.deleteCartItem(cartItemId);
     }
+
 }
