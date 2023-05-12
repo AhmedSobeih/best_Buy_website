@@ -56,6 +56,12 @@ public class ProductsController {
         productService.deleteProduct(id);
     }
 
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> searchProducts(@RequestParam("query") String query){
+        return productService.searchProducts(query);
+    }
+
     @PostMapping("/sendAuthRequest")
     public ResponseEntity testMQ(){
         Command c= authenticateCommand.setRequest(new AuthRequest("balabizo"));
