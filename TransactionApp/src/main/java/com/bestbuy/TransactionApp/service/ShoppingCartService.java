@@ -2,6 +2,7 @@ package com.bestbuy.TransactionApp.service;
 
 import com.bestbuy.TransactionApp.dto.CartItemResponse;
 import com.bestbuy.TransactionApp.dto.ShoppingCartResponse;
+import com.bestbuy.TransactionApp.exception.CartExceptionSupplier;
 import com.bestbuy.TransactionApp.model.CartItem;
 import com.bestbuy.TransactionApp.model.ShoppingCart;
 import com.bestbuy.TransactionApp.repository.ShoppingCartRepository;
@@ -16,9 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ShoppingCartService{
-
     private final ShoppingCartRepository shoppingCartRepository;
     private final CartItemService cartItemService;
+    private final CartExceptionSupplier cartExceptionSupplier;
 
     public ShoppingCartResponse createShoppingCart(Long userId) {
         Optional<ShoppingCart> optionalShoppingCart = shoppingCartRepository.getShoppingCartByUserId(userId);
@@ -40,7 +41,7 @@ public class ShoppingCartService{
     }
 
     public Boolean isShoppingCartEmpty(Long userId){
-        return shoppingCartRepository.getReferenceById(userId).getCartItemList().size() == 0;
+        return getShoppingCart(userId).getCartItemList().size() == 0;
     }
 
     public void clearShoppingCart(Long userId){
@@ -87,12 +88,13 @@ public class ShoppingCartService{
         return shoppingCarts.stream().map(shoppingCart -> mapToShoppingCartResponse(shoppingCart)).toList();
     }
 
-    public ShoppingCartResponse getShoppingCart(Long userId) {
-        Optional<ShoppingCart> optionalShoppingCart = shoppingCartRepository.findById(userId);
-        if(optionalShoppingCart.isPresent())
-            return mapToShoppingCartResponse(optionalShoppingCart.get());
-        else
-            throw new NoSuchElementException("Shopping Cart with id " + userId + " doesn't exist");
+    public ShoppingCartResponse getShoppingCartResponse(Long userId) {
+        return mapToShoppingCartResponse(getShoppingCart(userId));
+    }
+
+    public ShoppingCart getShoppingCart(Long userId) {
+        return shoppingCartRepository.getShoppingCartByUserId(userId)
+                .orElseThrow(cartExceptionSupplier.notFound(userId));
     }
 
     public CartItemResponse deleteCartItem(Long cartItemId,Long userId ) {

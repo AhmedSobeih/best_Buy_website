@@ -48,5 +48,20 @@ public class OrderController {
         return orderService.placeOrder(userId);
     }
 
+    @PostMapping("/cancel/{order_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public OrderResponse cancelOrder(@PathVariable("order_id") Long orderId){
+        logger.info("Cancelled order with id: {}", orderId);
+        return orderService.cancelOrder(orderId);
+    }
+
+    @DeleteMapping("/{order_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public OrderResponse deleteOrder(@PathVariable("order_id") Long orderId){
+        logger.info("Deleted order with id: {}", orderId);
+        return orderService.deleteOrder(orderId);
+    }
+
+
 
 }

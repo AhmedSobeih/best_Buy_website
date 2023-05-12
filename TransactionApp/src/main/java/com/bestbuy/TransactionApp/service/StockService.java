@@ -42,7 +42,7 @@ public class StockService {
         if (stock.getQuantity() >= quantity)
                 return stock;
         else
-            throw stockExceptionSupplier.cannotDecrement(productId);
+            throw stockExceptionSupplier.cannotDecrement(productId, stock.getQuantity(), quantity);
     }
 
     public Stock getStockByProductId(String productId) {
