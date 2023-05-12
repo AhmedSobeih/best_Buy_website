@@ -1,5 +1,6 @@
 package com.bestbuy.TransactionApp.model;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
