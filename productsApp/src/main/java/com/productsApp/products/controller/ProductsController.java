@@ -3,6 +3,8 @@ package com.productsApp.products.controller;
 import com.productsApp.products.DTO.*;
 import com.productsApp.products.commands.AuthenticateCommand;
 import com.productsApp.products.commands.Command;
+import com.productsApp.products.commands.ReviewCommand;
+import com.productsApp.products.commands.StockCommand;
 import com.productsApp.products.model.Product;
 import com.productsApp.products.queue.AuthSender;
 import com.productsApp.products.queue.ReviewSender;
@@ -26,8 +28,9 @@ public class ProductsController {
     private final AuthenticateCommand authenticateCommand;
     private final StockSender stockSender;
 
-    private final ReviewSender reviewSender;
+    private final StockCommand stockCommand;
 
+    private final ReviewCommand reviewCommand;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -69,13 +72,15 @@ public class ProductsController {
 
     @PostMapping("/sendAddProductToStockRequest")
     public ResponseEntity testMQ2(){
-        stockSender.sendAddProductRequest(new AddProductToStockRequest("lhdfiusdgfjsd","id",20,1000));
+        Command c= stockCommand.setRequest(new AddProductToStockRequest("lhdfiusdgfjsd","id",20,1000));
+        c.execute();
         return ResponseEntity.ok("message sent to stock successfully");
     }
 
     @PostMapping("/sendReviewRequest")
     public ResponseEntity testMQ3(){
-        reviewSender.sendAddReviewRequest(new ReviewRequest("lhdfiusdgfjsd","id"));
+        Command c= reviewCommand.setRequest(new ReviewRequest("lhdfiusdgfjsd","id"));
+        c.execute();
         return ResponseEntity.ok("review sent to product successfully");
     }
 

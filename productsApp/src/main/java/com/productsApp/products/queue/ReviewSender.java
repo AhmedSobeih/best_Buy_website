@@ -21,7 +21,7 @@ public class ReviewSender {
         this.rabbitTemplate=rabbitTemplate;
     }
 
-    public void sendAddReviewRequest(ReviewRequest ReviewRequest){
+    public void sendReviewRequest(ReviewRequest ReviewRequest){
         rabbitTemplate.convertAndSend(exchange,routingKey,ReviewRequest);
         System.out.printf("message sent %s %s",exchange,routingKey);
     }

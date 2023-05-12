@@ -1,6 +1,7 @@
 package com.productsApp.products.queue;
 
 import com.productsApp.products.DTO.AddProductToStockRequest;
+import com.productsApp.products.DTO.AuthRequest;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,4 +27,6 @@ public class StockSender {
         System.out.printf("message sent %s %s",exchange,routingKey);
     }
 
+    public void sendStockRequest(AuthRequest request) {
+    }
 }
