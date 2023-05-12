@@ -60,7 +60,6 @@
 	<modules>
 		<module>authenticationApp</module>
 		<module>userApp</module>
-		<module>transactionsApp</module>
 		<module>productsApp</module>
 		<module>messageApp</module>
 	</modules>
