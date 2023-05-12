@@ -1,7 +1,6 @@
 package com.bestbuy.TransactionApp.service;
 
 import com.bestbuy.TransactionApp.dto.OrderResponse;
-import com.bestbuy.TransactionApp.dto.ShoppingCartResponse;
 import com.bestbuy.TransactionApp.exception.OrderExceptionSupplier;
 import com.bestbuy.TransactionApp.model.*;
 import com.bestbuy.TransactionApp.repository.OrderRepository;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
