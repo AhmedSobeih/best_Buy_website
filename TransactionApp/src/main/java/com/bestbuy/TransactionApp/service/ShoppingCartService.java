@@ -7,10 +7,13 @@ import com.bestbuy.TransactionApp.exception.CartItemExceptionSupplier;
 import com.bestbuy.TransactionApp.model.CartItem;
 import com.bestbuy.TransactionApp.model.ShoppingCart;
 import com.bestbuy.TransactionApp.repository.ShoppingCartRepository;
+import com.bestbuy.TransactionApp.service.Redis.RedisCacheService;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,11 +24,17 @@ public class ShoppingCartService{
     private final CartExceptionSupplier cartExceptionSupplier;
     private final CartItemExceptionSupplier cartItemExceptionSupplier;
 
+    @Autowired
+    private final RedisCacheService redisCacheService;
+
     public ShoppingCartResponse createShoppingCart(Long userId) {
         if(shoppingCartRepository.existsById(userId))
             throw cartExceptionSupplier.alreadyExists(userId);
         ShoppingCart shoppingCart = new ShoppingCart(userId);
         ShoppingCart savedShoppingCart = shoppingCartRepository.save(shoppingCart);
+
+        redisCacheService.storeShoppingCart(userId, savedShoppingCart);
+
         return mapToShoppingCartResponse(savedShoppingCart);
 
     }
@@ -45,6 +54,9 @@ public class ShoppingCartService{
     public ShoppingCartResponse clearShoppingCart(Long userId){
         ShoppingCart shoppingCart = getShoppingCart(userId);
         shoppingCart.getCartItemList().clear();
+
+        redisCacheService.storeShoppingCart(userId, shoppingCart);
+
         return mapToShoppingCartResponse(shoppingCartRepository.save(shoppingCart));
     }
 
@@ -59,6 +71,9 @@ public class ShoppingCartService{
         CartItem cartItem = cartItemService.createCartItem(productId, quantity);
         shoppingCart.getCartItemList().add(cartItem);
         shoppingCartRepository.save(shoppingCart);
+
+        redisCacheService.storeShoppingCart(userId, shoppingCart);
+
         return cartItemService.mapToCartItemResponse(cartItem);
     }
 
@@ -69,6 +84,9 @@ public class ShoppingCartService{
             this.deleteCartItem(cartItemId,userId);
             return cartItemService.mapToCartItemResponse(cartItem);
         }
+
+        redisCacheService.flushShoppingCartCache(userId);
+
         return cartItemService.mapToCartItemResponse(cartItemService.updateCartItem(cartItem));
     }
 
@@ -90,8 +108,15 @@ public class ShoppingCartService{
     }
 
     public ShoppingCart getShoppingCart(Long userId) {
-        return shoppingCartRepository.getShoppingCartByUserId(userId)
-                .orElseThrow(cartExceptionSupplier.notFound(userId));
+        ShoppingCart shoppingCart = redisCacheService.retrieveShoppingCart(userId);
+        if(shoppingCart == null){
+            shoppingCart = shoppingCartRepository.getShoppingCartByUserId(userId)
+            .orElseThrow(cartExceptionSupplier.notFound(userId));
+
+            redisCacheService.storeShoppingCart(userId, shoppingCart);
+        }
+
+        return shoppingCart;
     }
 
     public CartItemResponse deleteCartItem(Long cartItemId,Long userId ) {
@@ -108,6 +133,9 @@ public class ShoppingCartService{
         shoppingCart.getCartItemList().remove(index);
         CartItemResponse cartItemResponse = cartItemService.getCartItemResponseById(cartItemId);
         shoppingCartRepository.save(shoppingCart);
+
+        redisCacheService.storeShoppingCart(userId, shoppingCart);
+
         return cartItemResponse;
     }
 
