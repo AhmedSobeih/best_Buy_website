@@ -6,6 +6,8 @@ import com.authenticationApp.authentication.entity.AuthenticationEntity;
 import com.authenticationApp.authentication.queue.AuthenticationReceiver;
 import com.authenticationApp.authentication.queue.AuthenticationSender;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,7 @@ public class AuthenticationController {
     private AuthenticationReceiver authenticationReceiver;
 
     private final AuthenticationService service;
+    private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     /*@PostMapping(path = "/test")
     public AuthenticationEntity saveNewUser(
@@ -35,7 +38,9 @@ public class AuthenticationController {
     @PostMapping(path = "/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(service.register(request));
+        ResponseEntity<AuthenticationResponse> response = ResponseEntity.ok(service.register(request));
+        logger.info("user registerd", response);
+        return response;
     }
 
     @PostMapping(path = "/authenticate")
