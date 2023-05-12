@@ -2,6 +2,7 @@ package com.productReviewsApp.reviews.service;
 
 import com.productReviewsApp.reviews.dto.ReviewRequest;
 import com.productReviewsApp.reviews.dto.ReviewResponce;
+import com.productReviewsApp.reviews.dto.ReviewRUDRequest;
 import com.productReviewsApp.reviews.model.Review;
 import com.productReviewsApp.reviews.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +60,18 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-    public void updateReview(Review review){
+    public void updateReview(ReviewRUDRequest reviewRUDRequest){
+        Review review = Review.builder().
+                id(reviewRUDRequest.getId()).
+                userID(reviewRUDRequest.getUserID()).
+                model(reviewRUDRequest.getModel()).
+                comment(reviewRUDRequest.getComment()).
+                likes(reviewRUDRequest.getLikes()).
+                dislikes(reviewRUDRequest.getDislikes()).
+                rating(reviewRUDRequest.getRating()).
+                date(reviewRUDRequest.getDate()).
+                build();
+
         Review savedReview = reviewRepository.findById(review.getId())
                 .orElseThrow(() -> new RuntimeException(
                         String.format("Cannot find a review by ID %s", review.getId())

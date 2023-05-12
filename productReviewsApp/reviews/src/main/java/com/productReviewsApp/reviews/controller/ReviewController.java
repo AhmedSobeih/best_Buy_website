@@ -2,6 +2,7 @@ package com.productReviewsApp.reviews.controller;
 
 import com.productReviewsApp.reviews.dto.ReviewRequest;
 import com.productReviewsApp.reviews.dto.ReviewResponce;
+import com.productReviewsApp.reviews.dto.ReviewRUDRequest;
 import com.productReviewsApp.reviews.model.Review;
 import com.productReviewsApp.reviews.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,8 @@ public class ReviewController {
     }
 
     @PutMapping
-    public ResponseEntity updateReview(@RequestBody Review review){
-        reviewService.updateReview(review);
+    public ResponseEntity updateReview(@RequestBody ReviewRUDRequest reviewRUDRequest){
+        reviewService.updateReview(reviewRUDRequest);
         return ResponseEntity.ok().build();
     }
 
