@@ -1,6 +1,8 @@
 package com.productsApp.products.controller;
 
 import com.productsApp.products.DTO.*;
+import com.productsApp.products.commands.AuthenticateCommand;
+import com.productsApp.products.commands.Command;
 import com.productsApp.products.model.Product;
 import com.productsApp.products.queue.AuthSender;
 import com.productsApp.products.queue.StockSender;
@@ -18,7 +20,7 @@ import java.util.List;
 public class ProductsController {
 
     private final ProductService productService;
-    private final AuthSender authSender;
+    private final AuthenticateCommand authenticateCommand;
     private final StockSender stockSender;
 
     @PostMapping
@@ -51,7 +53,8 @@ public class ProductsController {
 
     @PostMapping("/sendAuthRequest")
     public ResponseEntity testMQ(){
-        authSender.sendAuthRequest(new AuthRequest("lhdfiusdgfjsd"));
+        Command c= authenticateCommand.setRequest(new AuthRequest("balabizo"));
+        c.execute();
         return ResponseEntity.ok("message sent to auth successfully");
     }
 
