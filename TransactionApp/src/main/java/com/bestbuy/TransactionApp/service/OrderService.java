@@ -1,18 +1,17 @@
 package com.bestbuy.TransactionApp.service;
 
 import com.bestbuy.TransactionApp.dto.OrderResponse;
-import com.bestbuy.TransactionApp.dto.ShoppingCartResponse;
-import com.bestbuy.TransactionApp.model.Order;
-import com.bestbuy.TransactionApp.model.OrderItem;
-import com.bestbuy.TransactionApp.model.OrderStatus;
+import com.bestbuy.TransactionApp.exception.OrderExceptionSupplier;
+import com.bestbuy.TransactionApp.model.*;
 import com.bestbuy.TransactionApp.repository.OrderRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +19,17 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ShoppingCartService shoppingCartService;
     private final StockService stockService;
+    private final OrderExceptionSupplier orderExceptionSupplier;
 
+    @Transactional
     public OrderResponse placeOrder(Long userId) {
-        ShoppingCartResponse shoppingCartResponse = shoppingCartService.getShoppingCart(userId);
-        List<OrderItem> orderItemList = createOrderItems(shoppingCartResponse);
+        if(shoppingCartService.isShoppingCartEmpty(userId))
+            throw orderExceptionSupplier.emptyCart(userId);
+        ShoppingCart shoppingCart = shoppingCartService.getShoppingCart(userId);
+        List<OrderItem> orderItemList = createOrderItems(shoppingCart);
         if(updateStock(orderItemList)) {
-            Order order = Order.builder().orderItemList(orderItemList).userId(userId).status(OrderStatus.PLACED).build();
+            Order order = Order.builder().orderItemList(orderItemList).userId(userId).status(OrderStatus.PLACED)
+                    .createdAt(LocalDateTime.now()).build();
             orderRepository.save(order);
             shoppingCartService.clearShoppingCart(userId);
             return mapOrder(order);
@@ -33,23 +37,28 @@ public class OrderService {
         return null;
     }
 
-    private boolean updateStock(List<OrderItem> orderItemList) {
-        for(OrderItem orderItem:orderItemList)
-            stockService.canDecrementStockOrThrow(orderItem.getProductId(),orderItem.getQuantity());
+    public OrderResponse cancelOrder(Long orderId) {
+        throw new NoSuchElementException("Not implemented yet");
+    }
 
-        orderItemList.stream().map(orderItem -> stockService.decrementStock(orderItem.getProductId(),orderItem.getQuantity()));
+    private boolean updateStock(List<OrderItem> orderItemList) {
+        orderItemList.stream().forEach((orderItem ->
+                stockService.canDecrementStockOrThrow(orderItem.getProductId(), orderItem.getQuantity())));
+
+        orderItemList.stream().forEach(orderItem ->
+                stockService.decrementStock(orderItem.getProductId(),orderItem.getQuantity()));
         return true;
     }
 
-    private List<OrderItem> createOrderItems(ShoppingCartResponse shoppingCartResponse) {
-        List<OrderItem> orderItemList = new ArrayList<>();
-        shoppingCartResponse.getCartItemList().stream()
-                .map(cartItemResponse -> orderItemList.
-                        add(OrderItem.builder().
-                                productId(cartItemResponse.getProductId())
-                                .quantity(cartItemResponse.getQuantity()).build()));
+    private List<OrderItem> createOrderItems(ShoppingCart shoppingCart) {
+        return shoppingCart.getCartItemList().stream().map(this::buildOrderItem).toList();
+    }
 
-        return orderItemList;
+    public OrderItem buildOrderItem(CartItem cartItem){
+        return OrderItem.builder()
+                .productId(cartItem.getProductId())
+                .quantity(cartItem.getQuantity())
+                .price(stockService.getPriceOfProduct(cartItem.getProductId())).build();
     }
 
     public List<OrderResponse> getAllOrders() {
@@ -63,11 +72,13 @@ public class OrderService {
     }
 
     public OrderResponse getOrder(Long orderId) {
-        Optional<Order> order = orderRepository.getOrderById(orderId);
-        if (order.isPresent())
-            return mapOrder(order.get());
-        else
-            throw new NoSuchElementException("Order with id " + orderId + "doesn't exist");
+        return mapOrder(orderRepository.getOrderById(orderId).orElseThrow(orderExceptionSupplier.notFound(orderId)));
+    }
+
+    public OrderResponse deleteOrder(Long orderId) {
+        OrderResponse orderResponse = getOrder(orderId);
+        orderRepository.deleteById(orderId);
+        return orderResponse;
     }
 
     public OrderResponse mapOrder(Order order) {
@@ -77,6 +88,5 @@ public class OrderService {
                 .createdAt(order.getCreatedAt()).orderItemList(new ArrayList<>(order.getOrderItemList()))
                 .build();
     }
-
 
 }
