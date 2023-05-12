@@ -24,20 +24,20 @@ public class ProductsController {
     private final StockSender stockSender;
 
     @PostMapping
-    public ResponseEntity createProduct(@RequestBody ProductRequest productRequest){
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createProduct(@RequestBody ProductRequest productRequest){
         productService.createProduct(productRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-
     @PutMapping
-    public ResponseEntity updateProduct(@RequestBody ProductRUDRequest productRUDRequest){
+    @ResponseStatus(HttpStatus.OK)
+    public void updateProduct(@RequestBody ProductRUDRequest productRUDRequest){
         productService.updateProduct(productRUDRequest);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts(){
-        return ResponseEntity.ok(productService.getAllProducts());
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> getAllProducts(){
+        return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
