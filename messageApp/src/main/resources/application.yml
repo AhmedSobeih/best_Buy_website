@@ -1,0 +1,10 @@
+spring:
+  data:
+    mongodb:
+      auto-index-creation: true
+      authentication-database: admin
+      username: rootuser
+      password: rootpass
+      database: messageapp
+      port: 27017
+      host: localhost
