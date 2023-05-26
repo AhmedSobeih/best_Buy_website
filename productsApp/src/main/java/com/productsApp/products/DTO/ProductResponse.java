@@ -6,13 +6,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductResponse {
+
+public class ProductResponse  implements Serializable {
     @Id
     private String id;
     //    @Field(name="name")

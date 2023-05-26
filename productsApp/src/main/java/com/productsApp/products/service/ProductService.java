@@ -65,7 +65,19 @@ public class ProductService {
                 String.format("Cannot find product by name %s", name)
         ));
     }
+
+    public List<ProductResponse> searchProducts(String query){
+         List<Product> searchResults = productRepository.searchForProducts(query);
+         return searchResults.stream().map(product -> mapProductToResponse(product)).toList();
+    }
     public void deleteProduct(String id){
         productRepository.deleteById(id);
+    }
+
+    public ProductResponse getProductById(String id) {
+        Product myProduct = productRepository.findById(id).orElseThrow(() -> new RuntimeException(
+                String.format("Cannot find product by ID %s", id)
+        ));
+        return mapProductToResponse(myProduct) ;
     }
 }

@@ -1,10 +1,15 @@
 package com.productsApp.products.controller;
 
 import com.productsApp.products.DTO.*;
+
+import com.productsApp.products.commands.AuthenticateCommand;
+import com.productsApp.products.commands.Command;
 import com.productsApp.products.model.Product;
 import com.productsApp.products.queue.AuthSender;
 import com.productsApp.products.queue.StockSender;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,40 +23,52 @@ import java.util.List;
 public class ProductsController {
 
     private final ProductService productService;
-    private final AuthSender authSender;
+    private final AuthenticateCommand authenticateCommand;
     private final StockSender stockSender;
 
     @PostMapping
-    public ResponseEntity createProduct(@RequestBody ProductRequest productRequest){
-        productService.createProduct(productRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
 
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createProduct(@RequestBody ProductRequest productRequest){
+        productService.createProduct(productRequest);
+    }
     @PutMapping
-    public ResponseEntity updateProduct(@RequestBody ProductRUDRequest productRUDRequest){
+
+    @ResponseStatus(HttpStatus.OK)
+    public void updateProduct(@RequestBody ProductRUDRequest productRUDRequest){
         productService.updateProduct(productRUDRequest);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts(){
-        return ResponseEntity.ok(productService.getAllProducts());
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> getAllProducts(){
+        return productService.getAllProducts();
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<Product> getProductByName(@PathVariable String name){
-        return ResponseEntity.ok(productService.getProductByName(name));
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Cacheable(key = "#id",value = "Product")
+    public ProductResponse getProductId(@PathVariable String id){
+        return productService.getProductById(id);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteProduct(@PathVariable String id){
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(key = "#id",value = "Product")
+    public void deleteProduct(@PathVariable String id){
         productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> searchProducts(@RequestParam("query") String query){
+        return productService.searchProducts(query);
     }
 
     @PostMapping("/sendAuthRequest")
     public ResponseEntity testMQ(){
-        authSender.sendAuthRequest(new AuthRequest("lhdfiusdgfjsd"));
+        Command c= authenticateCommand.setRequest(new AuthRequest("balabizo"));
+        c.execute();
         return ResponseEntity.ok("message sent to auth successfully");
     }
 
