@@ -19,6 +19,7 @@ public class ProductRequest implements Request{
     //    @Field(name="description")
     private String description;
 
+
     @Override
     public String requestType() {
         return "product_request";

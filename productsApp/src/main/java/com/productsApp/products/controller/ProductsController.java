@@ -1,6 +1,7 @@
 package com.productsApp.products.controller;
 
 import com.productsApp.products.DTO.*;
+
 import com.productsApp.products.commands.AuthenticateCommand;
 import com.productsApp.products.commands.Command;
 import com.productsApp.products.model.Product;
@@ -26,11 +27,13 @@ public class ProductsController {
     private final StockSender stockSender;
 
     @PostMapping
+
     @ResponseStatus(HttpStatus.CREATED)
     public void createProduct(@RequestBody ProductRequest productRequest){
         productService.createProduct(productRequest);
     }
     @PutMapping
+
     @ResponseStatus(HttpStatus.OK)
     public void updateProduct(@RequestBody ProductRUDRequest productRUDRequest){
         productService.updateProduct(productRUDRequest);
