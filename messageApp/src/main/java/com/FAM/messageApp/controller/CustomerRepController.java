@@ -9,40 +9,40 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("customer_rep")
+@RequestMapping("customer-rep")
 @AllArgsConstructor
 @CrossOrigin(originPatterns = "*", allowedHeaders = "*")
 public class CustomerRepController {
     @Autowired
-    private CustomerRepService service;
+    private CustomerRepService customerRepService;
     @PostMapping("save")
     public CustomerRep save(@RequestBody CustomerRep customerRep){
-        return service.save(customerRep);
+        return customerRepService.save(customerRep);
     }
     @GetMapping("get")
     public CustomerRep findCustomerRep(){
-        return service.findCustomerRep();
+        return customerRepService.findCustomerRep();
     }
-    @GetMapping("get_all")
+    @GetMapping("get-all")
     public List<CustomerRep> findAll(){
-        return service.findAll();
+        return customerRepService.findAll();
     }
     @GetMapping("take")
     public void takeCustomerRep(){
-        service.takeCustomerRep();
+        customerRepService.takeCustomerRep();
     }
     @GetMapping("remove")
     public void removeCustomerRep(){
-        service.removeRep();
+        customerRepService.removeRep();
     }
-    @GetMapping("end_chat/{id}")
+    @GetMapping("end-chat/{id}")
     public void endChat(@PathVariable int id){
-        service.customerRepEndChat(service.findById(id));
+        customerRepService.customerRepEndChat(customerRepService.findById(id));
     }
 
-    @GetMapping("remove_all")
+    @GetMapping("remove-all")
     public void removeAll(){
-        service.removeAll();
+        customerRepService.removeAll();
     }
 
 }

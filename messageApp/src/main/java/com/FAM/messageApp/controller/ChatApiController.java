@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @CrossOrigin(originPatterns = "*", allowedHeaders = "*")
 public class ChatApiController {
-//    private final ChatService chatService;
+    //    private final ChatService chatService;
     @Autowired
     private ChatService chatService;
 
@@ -31,41 +31,39 @@ public class ChatApiController {
     private CustomerRepService customerRepService;
 
     @GetMapping("/{chatId}")
-    public Chat getAllChatsByChId(@PathVariable String chatId){
+    public Chat getAllChatsByChatId(@PathVariable String chatId){
         return chatService.getChatById(chatId);
     }
 
-    @GetMapping("/user/{id}")
-    public List<Chat> getAllChatsByUserId(@PathVariable String id){
-        return chatService.getAllChatsByUserId(id);
+    @GetMapping("/user/{userId}")
+    public List<Chat> getAllChatsByUserId(@PathVariable String userId){
+        return chatService.getAllChatsByUserId(userId);
     }
 
-    @GetMapping("/customer/{id}")
-    public List<Chat> getAllChatsByCustomerId(@PathVariable String id){
-        return chatService.getAllChatsByCustomerId(id);
+    @GetMapping("/customer/{userId}")
+    public List<Chat> getAllChatsByCustomerId(@PathVariable String userId){
+        return chatService.getAllChatsByCustomerId(userId);
     }
+
+    @GetMapping("/representative/{userId}")
+    public List<Chat> getAllChatsByRepresentativeId(@PathVariable String userId){
+        return chatService.getAllChatsByRepresentativeId(userId);
+    }
+
 
     @PutMapping("/{chatId}/disable")
     public void disableChat(@PathVariable String chatId){
         chatService.disableChatById(chatId);
     }
 
-    @GetMapping("/representative/{id}")
-    public List<Chat> getAllChatsByRepresentativeId(@PathVariable String id){
-        return chatService.getAllChatsByRepresentativeId(id);
-    }
-    @PostMapping
-    public void saveChat(@RequestBody Chat chat){
-        chatService.createChat(chat);
-    }
-    @DeleteMapping("/{id}")
-    public void deleteChatById(@PathVariable String id){
-        chatService.deleteChatById(id);
+    @DeleteMapping("/{chatID}")
+    public void deleteChatById(@PathVariable String chatID){
+        chatService.deleteChatById(chatID);
 
     }
-    @DeleteMapping("/user/{id}")
-    public void deleteChatByUserId(@PathVariable String id){
-        chatService.deleteChatById(id);
+    @DeleteMapping("/user/{userID}")
+    public void deleteChatByUserId(@PathVariable String userID){
+        chatService.deleteChatById(userID);
     }
 
     @PostMapping(path = "/initiate")
