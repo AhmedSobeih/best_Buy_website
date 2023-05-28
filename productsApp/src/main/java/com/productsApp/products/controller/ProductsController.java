@@ -4,6 +4,7 @@ import com.productsApp.products.DTO.*;
 
 import com.productsApp.products.commands.AuthenticateCommand;
 import com.productsApp.products.commands.Command;
+import com.productsApp.products.commands.StockSenderCommand;
 import com.productsApp.products.model.Product;
 import com.productsApp.products.queue.AuthSender;
 import com.productsApp.products.queue.StockSender;
@@ -24,6 +25,8 @@ public class ProductsController {
 
     private final ProductService productService;
     private final AuthenticateCommand authenticateCommand;
+
+    private final StockSenderCommand stockSenderCommand;
     private final StockSender stockSender;
 
     @PostMapping
@@ -67,14 +70,15 @@ public class ProductsController {
 
     @PostMapping("/sendAuthRequest")
     public ResponseEntity testMQ(){
-        Command c= authenticateCommand.setRequest(new AuthRequest("balabizo"));
+        Command c = authenticateCommand.setRequest(new AuthRequest("balabizo"));
         c.execute();
         return ResponseEntity.ok("message sent to auth successfully");
     }
 
     @PostMapping("/sendAddProductToStockRequest")
     public ResponseEntity testMQ2(){
-        stockSender.sendAddProductRequest(new AddProductToStockRequest("lhdfiusdgfjsd","id",20,1000));
+        Command c = stockSenderCommand.AddProductRequest(new AddProductToStockRequest("lhdfiusdgfjsd","id",20,1000));
+        c.execute();
         return ResponseEntity.ok("message sent to stock successfully");
     }
 
