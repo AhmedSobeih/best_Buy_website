@@ -74,7 +74,8 @@
 	<modules>
 		<module>authenticationApp</module>
 		<module>userApp</module>
-		<module>TransactionApp</module>
+
+		<module>transactionApp</module>
 		<module>productsApp</module>
 		<module>messageApp</module>
 		<module>productReviewsApp/reviews</module>
