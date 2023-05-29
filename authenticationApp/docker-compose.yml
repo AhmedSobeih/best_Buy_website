@@ -3,12 +3,12 @@ services:
   authentication_redis:
     image: redis:latest
     ports:
-      - 6379:6379
+      - 6381:6379
 
   authentication_postgres:
     image: postgres:latest
     ports:
-      - 5432:5432
+      - 5441:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
@@ -17,8 +17,8 @@ services:
   authentication_rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
-      - 5671:5672
-      - 15671:15672
+      - 5681:5672
+      - 15681:15672
     volumes:
       - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
       - ./definitions.json:/etc/rabbitmq/definitions.json:ro
@@ -29,7 +29,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8090:8090
+      - 8081:8090
     depends_on:
       - authentication_postgres
       - authentication_redis
