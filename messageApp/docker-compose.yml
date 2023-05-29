@@ -23,7 +23,7 @@ services:
       ME_CONFIG_MONGODB_SERVER: mongodb
     depends_on:
       - mongodb
-#redis
+
   cache:
     image: redis:6.2-alpine
     restart: always
@@ -33,40 +33,26 @@ services:
     volumes:
       - cache:/data
 
-#  prometheus:
-#    image: prom/prometheus
-#    volumes:
-#      - ./monitor/prometheus/:/etc/prometheus/
-#      - prometheus_data:/prometheus
-#    command:
-#      - '--config.file=/etc/prometheus/prometheus.yml'
-#      - '--storage.tsdb.path=/prometheus'
-#      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-#      - '--web.console.templates=/usr/share/prometheus/consoles'
-#    ports:
-#      - 9090:9090
-#    restart: always
-
-#  grafana:
-#    image: grafana/grafana
-#    depends_on:
-#      - prometheus
-#    ports:
-#      - 3000:3000
-#    volumes:
-#      - grafana_data:/var/lib/grafana
-#      - ./monitor/grafana/provisioning/:/etc/grafana/provisioning/
-#    env_file:
-#      - ./monitor/grafana/config.monitoring
-#    restart: always
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongodb
+      - mongo-express
+      - cache
+    environment:
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_DATA_MONGODB_HOST: mongodb
 
 
 volumes:
   data: {}
   cache:
     driver: local
-#  prometheus_data: { }
-#  grafana_data: { }
 
 networks:
   default:
