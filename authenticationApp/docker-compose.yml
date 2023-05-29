@@ -1,11 +1,11 @@
 version: '3'
 services:
-  redis:
+  authentication_redis:
     image: redis:latest
     ports:
-      - 6380:6380
+      - 6379:6379
 
-  postgres:
+  authentication_postgres:
     image: postgres:latest
     ports:
       - 5432:5432
@@ -14,7 +14,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: authentication
 
-  rabbitmq:
+  authentication_rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
       - 5671:5672
@@ -24,23 +24,23 @@ services:
       - ./definitions.json:/etc/rabbitmq/definitions.json:ro
 
 
-  spring-app:
+  authentication_app:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - 8090:8090
     depends_on:
-      - postgres
-      - redis
-      - rabbitmq
+      - authentication_postgres
+      - authentication_redis
+      - authentication_rabbitmq
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/authentication
+      SPRING_DATASOURCE_URL: jdbc:postgresql://authentication_postgres:5432/authentication
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6380
-      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATA_REDIS_HOST: authentication_redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_RABBITMQ_HOST: authentication_rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
