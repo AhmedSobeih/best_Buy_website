@@ -1,11 +1,11 @@
 version: '3'
 services:
-  redis:
+  transactions_redis:
     image: redis:latest
     ports:
       - 6379:6379
 
-  postgres:
+  transactions_postgres:
     image: postgres:latest
     restart: always
     ports:
@@ -15,18 +15,18 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: transactions
 
-  spring-app:
+  transactions_app:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - 8091:8091
     depends_on:
-      - postgres
-      - redis
+      - transactions_postgres
+      - transactions_redis
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/transactions
+      SPRING_DATASOURCE_URL: jdbc:postgresql://transactions_postgres:5432/transactions
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_HOST: transactions_redis
+      SPRING_DATA_REDIS_PORT: 6379
