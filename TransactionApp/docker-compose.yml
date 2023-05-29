@@ -3,13 +3,13 @@ services:
   transactions_redis:
     image: redis:latest
     ports:
-      - 6379:6379
+      - 6384:6379
 
   transactions_postgres:
     image: postgres:latest
     restart: always
     ports:
-      - 5431:5432
+      - 5442:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8091:8091
+      - 8084:8091
     depends_on:
       - transactions_postgres
       - transactions_redis

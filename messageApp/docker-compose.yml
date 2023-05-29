@@ -16,7 +16,7 @@ services:
     container_name: mongo-express
     restart: always
     ports:
-      - "8081:8081"
+      - "8100:8081"
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: rootuser
       ME_CONFIG_MONGODB_ADMINPASSWORD: rootpass
@@ -28,7 +28,7 @@ services:
     image: redis:6.2-alpine
     restart: always
     ports:
-      - '6379:6379'
+      - '6382:6379'
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - cache:/data
@@ -38,7 +38,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8080:8080
+      - 8082:8080
     depends_on:
       - message_mongodb
       - message_mongo-express

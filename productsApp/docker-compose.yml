@@ -4,18 +4,18 @@ services:
   products_redis:
     image: redis:latest
     ports:
-      - 6379:6379
+      - 6383:6379
 
   products_mongodb:
     image: mongo
     ports:
-      - "27017:27017"
+      - "27018:27017"
 
   products_rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
-      - 5671:5672
-      - 15671:15672
+      - 5682:5672
+      - 15682:15672
     volumes:
       - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
       - ./definitions.json:/etc/rabbitmq/definitions.json:ro
@@ -26,7 +26,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8080:8080
+      - 8083:8080
     depends_on:
       - products_redis
       - products_mongodb
