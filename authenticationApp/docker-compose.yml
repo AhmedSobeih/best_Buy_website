@@ -19,6 +19,10 @@ services:
     ports:
       - 5671:5672
       - 15671:15672
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./definitions.json:/etc/rabbitmq/definitions.json:ro
+
 
   spring-app:
     build:
