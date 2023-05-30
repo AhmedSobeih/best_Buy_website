@@ -1,6 +1,6 @@
 #!/bin/bash
 
-apps=("authenticationApp" "messageApp" "productsApp" "TransactionApp")
+apps=("authenticationApp" "messageApp" "productsApp" "TransactionApp" "productReviewsApp/reviews")
 
 for app in "${apps[@]}"; do
     cd ./$app
