@@ -1,0 +1,36 @@
+version: '3'
+services:
+  reviews_redis:
+    image: redis:latest
+    ports:
+      - 6385:6379
+
+
+  reviews_mongodb:
+    image: mongo
+    ports:
+      - "27020:27017"
+
+#  reviews_rabbitmq:
+#    image: rabbitmq:3-management-alpine
+#    ports:
+#      - 5683:5672
+#      - 15683:15672
+#    volumes:
+#      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+#      - ./definitions.json:/etc/rabbitmq/definitions.json:ro
+
+  reviews_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8085:8080
+    depends_on:
+      - reviews_mongodb
+      - reviews_redis
+#      - reviews_rabbitmq
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://reviews_mongodb:27017/products
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_HOST: reviews_redis
