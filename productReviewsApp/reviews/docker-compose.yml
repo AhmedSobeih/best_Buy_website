@@ -1,11 +1,5 @@
 version: '3'
 services:
-  reviews_redis:
-    image: redis:latest
-    ports:
-      - 6385:6379
-
-
   reviews_mongodb:
     image: mongo
     ports:
@@ -28,9 +22,6 @@ services:
       - 8085:8080
     depends_on:
       - reviews_mongodb
-      - reviews_redis
 #      - reviews_rabbitmq
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://reviews_mongodb:27017/products
-      SPRING_DATA_REDIS_PORT: 6379
-      SPRING_DATA_REDIS_HOST: reviews_redis
