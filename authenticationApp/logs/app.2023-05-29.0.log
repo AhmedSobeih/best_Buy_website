@@ -1,0 +1,35 @@
+2023-05-12 21:33:56,807 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 8.0.0.Final
+2023-05-12 21:33:56,878 INFO c.a.a.AuthenticationApplication [main] Starting AuthenticationApplication using Java 17.0.6 with PID 22724 (D:\GUC\Semester 10\Scalable\best_Buy_website\authenticationApp\target\classes started by ziadk in D:\GUC\Semester 10\Scalable\best_Buy_website\authenticationApp)
+2023-05-12 21:33:56,879 INFO c.a.a.AuthenticationApplication [main] No active profile set, falling back to 1 default profile: "default"
+2023-05-12 21:33:57,517 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2023-05-12 21:33:57,519 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-05-12 21:33:57,658 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 132 ms. Found 1 JPA repository interfaces.
+2023-05-12 21:33:57,672 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2023-05-12 21:33:57,673 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-05-12 21:33:57,692 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.authenticationApp.authentication.repository.AuthenticationRepo; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-05-12 21:33:57,692 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
+2023-05-12 21:33:58,297 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8090 (http)
+2023-05-12 21:33:58,309 INFO o.a.c.h.Http11NioProtocol [main] Initializing ProtocolHandler ["http-nio-8090"]
+2023-05-12 21:33:58,311 INFO o.a.c.c.StandardService [main] Starting service [Tomcat]
+2023-05-12 21:33:58,312 INFO o.a.c.c.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-05-12 21:33:58,410 INFO o.a.c.c.C.[.[.[/] [main] Initializing Spring embedded WebApplicationContext
+2023-05-12 21:33:58,410 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1502 ms
+2023-05-12 21:33:58,519 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-05-12 21:33:58,591 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-05-12 21:33:58,901 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2023-05-12 21:33:59,067 INFO c.z.h.p.HikariPool [main] HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@70139a81
+2023-05-12 21:33:59,070 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2023-05-12 21:33:59,120 INFO SQL dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2023-05-12 21:33:59,796 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-05-12 21:33:59,806 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-05-12 21:34:00,440 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-05-12 21:34:00,658 INFO o.s.s.w.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4619854a, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@c040c8d, org.springframework.security.web.context.SecurityContextHolderFilter@70ebaa1e, org.springframework.security.web.header.HeaderWriterFilter@715d82a0, org.springframework.security.web.authentication.logout.LogoutFilter@62966c9f, com.authenticationApp.authentication.config.JwtAuthenticationFilter@426a4301, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@615b1baf, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@108d59b6, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3453f79c, org.springframework.security.web.session.SessionManagementFilter@60e5b3a8, org.springframework.security.web.access.ExceptionTranslationFilter@492a220e, org.springframework.security.web.access.intercept.AuthorizationFilter@60655642]
+2023-05-12 21:34:01,179 INFO o.a.c.h.Http11NioProtocol [main] Starting ProtocolHandler ["http-nio-8090"]
+2023-05-12 21:34:01,205 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8090 (http) with context path ''
+2023-05-12 21:34:01,207 INFO o.s.a.r.c.CachingConnectionFactory [main] Attempting to connect to: [localhost:5672]
+2023-05-12 21:34:01,248 INFO o.s.a.r.c.CachingConnectionFactory [main] Created new connection: rabbitConnectionFactory#7f5a25e2:0/SimpleConnection@4a1cafb2 [delegate=amqp://guest@127.0.0.1:5672/, localPort= 53990]
+2023-05-12 21:34:01,284 INFO c.a.a.AuthenticationApplication [main] Started AuthenticationApplication in 4.738 seconds (process running for 5.27)
+2023-05-12 21:34:10,422 INFO o.a.c.c.C.[.[.[/] [http-nio-8090-exec-4] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-05-12 21:34:10,423 INFO o.s.w.s.DispatcherServlet [http-nio-8090-exec-4] Initializing Servlet 'dispatcherServlet'
+2023-05-12 21:34:10,424 INFO o.s.w.s.DispatcherServlet [http-nio-8090-exec-4] Completed initialization in 1 ms
+2023-05-12 21:34:10,742 INFO c.a.a.c.AuthenticationController [http-nio-8090-exec-4] user registerd
