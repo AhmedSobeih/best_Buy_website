@@ -8,6 +8,8 @@ import com.authenticationApp.authentication.repository.AuthenticationRepo;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
@@ -27,6 +29,9 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+
+    @Autowired
+    RedisTemplate redisTemplate;
 
     public AuthenticationResponse register(RegisterRequest request) {
         //check if user exists
