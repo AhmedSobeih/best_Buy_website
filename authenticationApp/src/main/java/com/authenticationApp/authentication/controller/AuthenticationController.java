@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,8 @@ public class AuthenticationController {
     private AuthenticationSender authenticationSender;
     @Autowired
     private AuthenticationReceiver authenticationReceiver;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     private final AuthenticationService service;
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
@@ -43,10 +46,20 @@ public class AuthenticationController {
         return response;
     }
 
-    @PostMapping(path = "/authenticate")
+    @PostMapping(path = "/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(service.authenticate(request));
+        AuthenticationResponse authenticationResponse = service.authenticate(request);
+
+        //Adding token to cache
+        redisTemplate.opsForValue().set(authenticationResponse.getToken(), "this is a token");
+
+        //getting token from cache
+        String value = redisTemplate.opsForValue().get(authenticationResponse.getToken());
+
+        System.out.println(value);
+
+        return ResponseEntity.ok(authenticationResponse);
     }
 
     @GetMapping(path = "/test")

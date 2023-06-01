@@ -13,5 +13,6 @@ public class AuthenticationReceiver {
     @RabbitListener(queues = "AuthenticationReceiver")
     public void receiveMessage(String message) {
         LOGGER.info("Received message: {}", message);
+        System.out.println(message);
     }
 }
