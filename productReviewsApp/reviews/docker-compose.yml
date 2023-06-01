@@ -1,0 +1,26 @@
+version: '3'
+services:
+  reviews_mongodb:
+    image: mongo
+    ports:
+      - "27020:27017"
+    networks:
+      - bestbuy
+
+  reviews_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8085:8080
+    depends_on:
+      - reviews_mongodb
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://reviews_mongodb:27017/products
+    networks:
+      - bestbuy
+
+networks:
+  bestbuy:
+    name: bestbuy
+    external: true

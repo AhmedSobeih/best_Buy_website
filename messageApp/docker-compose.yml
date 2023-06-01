@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  mongodb:
+  message_mongodb:
     image: mongo
     container_name: mongodb
     ports:
@@ -10,64 +10,59 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: rootuser
       MONGO_INITDB_ROOT_PASSWORD: rootpass
+    networks:
+      - bestbuy
 
-  mongo-express:
+  message_mongo-express:
     image: mongo-express
     container_name: mongo-express
     restart: always
     ports:
-      - "8081:8081"
+      - "8100:8081"
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: rootuser
       ME_CONFIG_MONGODB_ADMINPASSWORD: rootpass
-      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_SERVER: message_mongodb
     depends_on:
-      - mongodb
-#redis
-  cache:
+      - message_mongodb
+    networks:
+      - bestbuy
+
+  message_redis:
     image: redis:6.2-alpine
     restart: always
     ports:
-      - '6379:6379'
+      - '6382:6379'
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - cache:/data
+    networks:
+      - bestbuy
 
-#  prometheus:
-#    image: prom/prometheus
-#    volumes:
-#      - ./monitor/prometheus/:/etc/prometheus/
-#      - prometheus_data:/prometheus
-#    command:
-#      - '--config.file=/etc/prometheus/prometheus.yml'
-#      - '--storage.tsdb.path=/prometheus'
-#      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-#      - '--web.console.templates=/usr/share/prometheus/consoles'
-#    ports:
-#      - 9090:9090
-#    restart: always
-
-#  grafana:
-#    image: grafana/grafana
-#    depends_on:
-#      - prometheus
-#    ports:
-#      - 3000:3000
-#    volumes:
-#      - grafana_data:/var/lib/grafana
-#      - ./monitor/grafana/provisioning/:/etc/grafana/provisioning/
-#    env_file:
-#      - ./monitor/grafana/config.monitoring
-#    restart: always
+  message_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8082:8080
+    depends_on:
+      - message_mongodb
+      - message_mongo-express
+      - message_redis
+    environment:
+      SPRING_REDIS_HOST: message_redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_DATA_MONGODB_HOST: message_mongodb
+    networks:
+      - bestbuy
 
 
 volumes:
   data: {}
   cache:
     driver: local
-#  prometheus_data: { }
-#  grafana_data: { }
 
 networks:
-  default:
-    name: mongodb_network
+  bestbuy:
+    name: bestbuy
+    external: true

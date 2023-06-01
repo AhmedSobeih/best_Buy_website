@@ -35,7 +35,7 @@ public class ShoppingCartController {
     @ResponseStatus(HttpStatus.OK)
     public ShoppingCartResponse getShoppingCart(@PathVariable("user_id") Long userId){
         logger.info("Sent shopping cart of user with id: {}", userId);
-        return shoppingCartService.getShoppingCart(userId);
+        return shoppingCartService.getShoppingCartResponse(userId);
     }
 
 
@@ -44,6 +44,13 @@ public class ShoppingCartController {
     public ShoppingCartResponse createShoppingCart(@PathVariable("user_id") Long userId){
         logger.info("Created shopping cart for user: {}", userId);
         return shoppingCartService.createShoppingCart(userId);
+    }
+
+    @PostMapping("/clear/{user_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ShoppingCartResponse clearShoppingCart(@PathVariable("user_id") Long userId){
+        logger.info("Cleared shopping cart for user: {}", userId);
+        return shoppingCartService.clearShoppingCart(userId);
     }
 
     @PostMapping("/add-cart-item")

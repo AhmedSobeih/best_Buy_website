@@ -1,0 +1,47 @@
+version: '3'
+services:
+  transactions_redis:
+    image: redis:latest
+    ports:
+      - 6384:6379
+    networks:
+      - bestbuy
+
+  transactions_postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      - 5442:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: transactions
+    networks:
+      - bestbuy
+
+  transactions_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8084:8091
+    depends_on:
+      - transactions_postgres
+      - transactions_redis
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://transactions_postgres:5432/transactions
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATA_REDIS_HOST: transactions_redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_RABBITMQ_HOST: bestbuy_rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+    networks:
+      - bestbuy
+
+networks:
+  bestbuy:
+    name: bestbuy
+    external: true

@@ -12,17 +12,18 @@ public class StockExceptionSupplier {
         return new ApiBadRequestException("Stock with Id: " + productId + " already exists");
     }
 
-    public ApiRequestException cannotDecrement(String productId) {
-        return new ApiBadRequestException("There is no enough stock for product with id: " + productId);
+    public ApiRequestException cannotDecrement(String productId, Integer available, Integer required) {
+        return new ApiBadRequestException("There is no enough stock for product with id: " + productId +
+                ". Available: " + available + ", Required: " + required);
     }
 
     public ApiRequestException invalidDecrementAmount(Integer quantity) {
-        String msg = quantity == null? "Attribute quantity missing":("Invalid decrement amount: "+quantity);
+        String msg = quantity == null ? "Attribute quantity missing" : ("Invalid decrement amount: " + quantity);
         return new ApiBadRequestException(msg);
     }
 
     public ApiRequestException invalidIncrementAmount(Integer quantity) {
-        String msg = quantity == null? "Attribute quantity missing":("Invalid increment amount: "+quantity);
+        String msg = quantity == null ? "Attribute quantity missing" : ("Invalid increment amount: " + quantity);
         return new ApiBadRequestException(msg);
     }
 
