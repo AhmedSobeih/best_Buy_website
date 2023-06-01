@@ -8,3 +8,9 @@ services:
     volumes:
       - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
       - ./definitions.json:/etc/rabbitmq/definitions.json:ro
+    networks:
+      - bestbuy
+
+networks:
+  bestbuy:
+    name: bestbuy

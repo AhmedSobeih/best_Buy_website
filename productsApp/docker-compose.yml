@@ -5,11 +5,15 @@ services:
     image: redis:latest
     ports:
       - 6383:6379
+    networks:
+      - bestbuy
 
   products_mongodb:
     image: mongo
     ports:
       - "27018:27017"
+    networks:
+      - bestbuy
 
   products_app:
     build:
@@ -24,3 +28,10 @@ services:
       SPRING_DATA_MONGODB_URI: mongodb://products_mongodb:27017/products
       SPRING_DATA_REDIS_PORT: 6379
       SPRING_DATA_REDIS_HOST: products_redis
+    networks:
+      - bestbuy
+
+networks:
+  bestbuy:
+    name: bestbuy
+    external: true

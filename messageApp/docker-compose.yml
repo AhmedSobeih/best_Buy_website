@@ -10,6 +10,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: rootuser
       MONGO_INITDB_ROOT_PASSWORD: rootpass
+    networks:
+      - bestbuy
 
   message_mongo-express:
     image: mongo-express
@@ -23,6 +25,8 @@ services:
       ME_CONFIG_MONGODB_SERVER: message_mongodb
     depends_on:
       - message_mongodb
+    networks:
+      - bestbuy
 
   message_redis:
     image: redis:6.2-alpine
@@ -32,6 +36,8 @@ services:
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - cache:/data
+    networks:
+      - bestbuy
 
   message_app:
     build:
@@ -47,6 +53,8 @@ services:
       SPRING_REDIS_HOST: message_redis
       SPRING_REDIS_PORT: 6379
       SPRING_DATA_MONGODB_HOST: message_mongodb
+    networks:
+      - bestbuy
 
 
 volumes:
@@ -55,5 +63,6 @@ volumes:
     driver: local
 
 networks:
-  default:
-    name: mongodb_network
+  bestbuy:
+    name: bestbuy
+    external: true
