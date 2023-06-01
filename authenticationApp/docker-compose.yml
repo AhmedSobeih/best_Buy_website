@@ -14,16 +14,6 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: authentication
 
-  authentication_rabbitmq:
-    image: rabbitmq:3-management-alpine
-    ports:
-      - 5681:5672
-      - 15681:15672
-    volumes:
-      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-      - ./definitions.json:/etc/rabbitmq/definitions.json:ro
-
-
   authentication_app:
     build:
       context: .
@@ -33,14 +23,13 @@ services:
     depends_on:
       - authentication_postgres
       - authentication_redis
-      - authentication_rabbitmq
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://authentication_postgres:5432/authentication
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_DATA_REDIS_HOST: authentication_redis
       SPRING_DATA_REDIS_PORT: 6379
-      SPRING_RABBITMQ_HOST: authentication_rabbitmq
+      SPRING_RABBITMQ_HOST: bestbuy_rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest

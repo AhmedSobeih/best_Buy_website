@@ -4,6 +4,7 @@ docker login -u moeshiba -p Mohamed123
 apps=("authenticationApp" "messageApp" "productsApp" "TransactionApp" "productReviewsApp/reviews" "userApp")
 images=("authenticationapp-authentication_app" "messageapp-message_app" "productsapp-products_app" "transactionapp-transactions_app" "reviews-reviews_app" "userapp-user_app")
 
+docker compose up --build -d #builds the container of rabbitmq server
 
 pushd .
 
