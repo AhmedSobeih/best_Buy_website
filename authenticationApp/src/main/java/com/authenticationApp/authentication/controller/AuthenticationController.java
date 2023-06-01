@@ -30,6 +30,8 @@ public class AuthenticationController {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+
+
     private final AuthenticationService service;
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
@@ -50,17 +52,7 @@ public class AuthenticationController {
     @PostMapping(path = "/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request) {
-        AuthenticationResponse authenticationResponse = service.authenticate(request);
-
-        //Adding token to cache
-        redisTemplate.opsForValue().set(authenticationResponse.getToken(), "this is a token");
-
-        //getting token from cache
-        String value = redisTemplate.opsForValue().get(authenticationResponse.getToken());
-
-        System.out.println(value);
-
-        return ResponseEntity.ok(authenticationResponse);
+        return ResponseEntity.ok(service.authenticate(request));
     }
 
     @GetMapping(path = "/test")
