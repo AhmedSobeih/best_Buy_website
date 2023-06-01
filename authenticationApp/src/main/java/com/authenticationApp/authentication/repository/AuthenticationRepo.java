@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface AuthenticationRepo extends JpaRepository<AuthenticationEntity, Integer> {
 
     Optional<AuthenticationEntity> findByEmail(String email);
+
 }

@@ -1,6 +1,7 @@
 package com.authenticationApp.authentication.controller;
 
 
+import com.authenticationApp.authentication.config.JwtService;
 import com.authenticationApp.authentication.dao.AuthenticationDao;
 import com.authenticationApp.authentication.entity.AuthenticationEntity;
 import com.authenticationApp.authentication.queue.AuthenticationReceiver;
@@ -11,12 +12,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.Map;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/login")
+@RequestMapping(path = "/authentication")
 public class AuthenticationController {
 
     @Autowired
@@ -26,8 +31,10 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationReceiver authenticationReceiver;
 
+
     private final AuthenticationService service;
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+    private final JwtService jwtService;
 
     /*@PostMapping(path = "/test")
     public AuthenticationEntity saveNewUser(
@@ -35,25 +42,89 @@ public class AuthenticationController {
         return this.authenticationDao.saveNewUser(newUser);
     }*/
 
+    public String readTokenInClientSide(){
+        String filePath = "client.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line= reader.readLine();
+            System.out.println(line);
+            return line;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+
+
     @PostMapping(path = "/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request) {
         ResponseEntity<AuthenticationResponse> response = ResponseEntity.ok(service.register(request));
-        logger.info("user registerd", response);
+
         return response;
     }
 
-    @PostMapping(path = "/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
+    @PostMapping(path = "/login")
+    public ResponseEntity<AuthenticationResponse> login(
             @RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(service.authenticate(request));
+        AuthenticationResponse token=service.login(request);
+        String tokenString=token.getToken();
+        String filePath = "client.txt";
+        try {
+            FileWriter writer = new FileWriter(filePath);
+            writer.write(tokenString);
+            writer.close();
+            System.out.println("String saved to file successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        var mail = jwtService.extractUsername(tokenString);
+        System.out.println(mail);
+
+        return ResponseEntity.ok(token);
     }
+
+    @PostMapping(path = "/logout")
+    public void logout(String token) {
+        //delete token from reddis
+
+
+        String filePath = "client.txt";
+        try {
+            FileWriter writer = new FileWriter(filePath);
+            writer.write("");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PostMapping(path = "/changePassword")
+    public ResponseEntity<AuthenticationResponse> changePassword(@RequestBody Map<String, String> request) {
+        String newPassword = request.get("newPassword");
+        String tokenString = readTokenInClientSide();
+        var mail = jwtService.extractUsername(tokenString);
+        AuthenticationResponse newToken = service.changePassword(mail,newPassword);
+        logout(tokenString);
+
+        //save token in reddis cache
+
+        return ResponseEntity.ok(newToken);
+
+    }
+
+
+
 
     @GetMapping(path = "/test")
     public String testing() {
         authenticationSender.sendMessage("Hello world");
         return "Hello world";
     }
+
+
 
 
     /*@GetMapping(path = "/getAllUsers")
