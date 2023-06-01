@@ -49,6 +49,11 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
+    @GetMapping(path = "/test")
+    public String testing() {
+        authenticationSender.sendMessage("Hello world");
+        return "Hello world";
+    }
 
 
     /*@GetMapping(path = "/getAllUsers")

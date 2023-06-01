@@ -39,7 +39,7 @@ public class UserController {
         return this.userService.getUser(id);
     }
 
-    @GetMapping(path = "/{newUser}")
+    @GetMapping(path = "/{name}")
     public UserEntity getUserByName(
             @PathVariable String name) {
         return this.userService.getUserByName(name);

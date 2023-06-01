@@ -1,6 +1,6 @@
 package com.productsApp.products;
 
-import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
@@ -17,12 +17,21 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 
 @Configuration
 @EnableCaching
-public class RedisCacheConfig extends CachingConfigurerSupport {
+public class RedisCacheConfig {
+
+    //Redis server host ip/domain name
+	@Value("${spring.data.redis.host}")
+	private String redisHost;
+
+	//Redis server port
+	@Value("${spring.data.redis.port}")
+	private Integer redisPort;
+    
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration("localhost", 6379);
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
         LettuceConnectionFactory  conn= new LettuceConnectionFactory(config);
-//        conn.getConnection().setConfig("maxmemory-policy", "allkeys-lfu");
         return conn;
     }
 

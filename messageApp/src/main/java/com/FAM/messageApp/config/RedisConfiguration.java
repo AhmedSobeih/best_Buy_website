@@ -1,5 +1,6 @@
 package com.FAM.messageApp.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,9 +16,17 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @EnableCaching
 public class RedisConfiguration {
 
+    //Redis server host ip/domain name
+	@Value("${spring.redis.host}")
+	private String redisHost;
+
+	//Redis server port
+	@Value("${spring.redis.port}")
+	private Integer redisPort;
+
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfiguration = new RedisStandaloneConfiguration("localhost", 6379);
+        RedisStandaloneConfiguration redisConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
         return new JedisConnectionFactory(redisConfiguration);
     }
 
