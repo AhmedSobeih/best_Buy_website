@@ -109,6 +109,19 @@ public class AuthenticationService {
             e.printStackTrace();
         }
         return "logout successful";
+
+        //delete token from redis
+        /*
+        boolean result = redisTemplate.delete(token);
+        String result_txt;
+        if(result)
+            result_txt = "User Logged out";
+        else
+            result_txt = "No logged in user Exists";
+
+        return result_txt;*/
+
+
     }
 
     public AuthenticationResponse changePassword(String mail, String newPassword) {

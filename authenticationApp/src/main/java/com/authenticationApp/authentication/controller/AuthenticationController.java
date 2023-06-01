@@ -60,7 +60,7 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request) {
         AuthenticationResponse token=service.login(request);
         String tokenString=token.getToken();
-        redisTemplate.opsForValue().set(tokenString, "");
+        //redisTemplate.opsForValue().set(tokenString, "");
         String filePath = "client.txt";
         try {
             FileWriter writer = new FileWriter(filePath);
@@ -77,24 +77,8 @@ public class AuthenticationController {
 
     @PostMapping(path = "/logout")
     public String logout(@RequestParam String token) {
-        //delete token from redis
-        boolean result = redisTemplate.delete(token);
+        return service.logout(token);
 
-//        String filePath = "client.txt";
-//        try {
-//            FileWriter writer = new FileWriter(filePath);
-//            writer.write("");
-//            writer.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        String result_txt;
-        if(result)
-            result_txt = "User Logged out";
-        else
-            result_txt = "No logged in user Exists";
-
-        return result_txt;
     }
 
     @PostMapping(path = "/changePassword")
