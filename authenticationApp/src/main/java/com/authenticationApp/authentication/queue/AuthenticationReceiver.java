@@ -1,5 +1,7 @@
 package com.authenticationApp.authentication.queue;
 
+import com.authenticationApp.authentication.command.Command;
+import com.authenticationApp.authentication.command.CommandFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -12,7 +14,14 @@ public class AuthenticationReceiver {
     private static final Logger LOGGER = LoggerFactory.getLogger(Receiver.class);
     @RabbitListener(queues = "AuthenticationReceiver")
     public void receiveMessage(String message) {
+        handleMessage(message);
         LOGGER.info("Received message: {}", message);
         System.out.println(message);
+    }
+
+    public void handleMessage(String message)
+    {
+        Command command = CommandFactory.createCommand(message);
+        command.execute();
     }
 }

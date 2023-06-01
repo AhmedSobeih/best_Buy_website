@@ -5,21 +5,15 @@ services:
     image: redis:latest
     ports:
       - 6383:6379
+    networks:
+      - bestbuy
 
   products_mongodb:
     image: mongo
     ports:
       - "27018:27017"
-
-  products_rabbitmq:
-    image: rabbitmq:3-management-alpine
-    ports:
-      - 5682:5672
-      - 15682:15672
-    volumes:
-      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-      - ./definitions.json:/etc/rabbitmq/definitions.json:ro
-
+    networks:
+      - bestbuy
 
   products_app:
     build:
@@ -30,8 +24,14 @@ services:
     depends_on:
       - products_redis
       - products_mongodb
-      - products_rabbitmq
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://products_mongodb:27017/products
       SPRING_DATA_REDIS_PORT: 6379
       SPRING_DATA_REDIS_HOST: products_redis
+    networks:
+      - bestbuy
+
+networks:
+  bestbuy:
+    name: bestbuy
+    external: true
