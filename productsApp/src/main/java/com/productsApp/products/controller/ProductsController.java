@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.productsApp.products.service.ProductService;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -28,6 +29,8 @@ public class ProductsController {
 
     private final StockSenderCommand stockSenderCommand;
     private final StockSender stockSender;
+
+    private final RestTemplate restTemplate;
 
     @PostMapping
 
@@ -80,6 +83,16 @@ public class ProductsController {
         Command c = stockSenderCommand.AddProductRequest(new AddProductToStockRequest("lhdfiusdgfjsd","id",20,1000));
         c.execute();
         return ResponseEntity.ok("message sent to stock successfully");
+    }
+
+    @GetMapping("/eureka_test")
+    public ResponseEntity eureka_test (){
+        String resourceURL
+                = "http://products-app/products";
+        ResponseEntity<String> response
+                = restTemplate.getForEntity(resourceURL, String.class);
+        System.out.println(response.getStatusCode());
+        return ResponseEntity.ok("message sent");
     }
 
 }
