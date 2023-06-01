@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-service-app
+  name: authentication-service
   labels:
-    app: user-service-app
+    app: authentication-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app : user-service-app
+      app: authentication-service
   template:
     metadata:
       labels:
-        app: user-service-app
+        app: authentication-service
     spec:
       containers:
-        - name: user-service-app
-          image: moeshiba/userapp-user_app
+        - name: authentication-service
+          image: moeshiba/authenticationapp-authentication_app
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -26,10 +26,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-microservice
+  name: authentication-service
 spec:
   selector:
-    app: my-microservice
+    app: authentication-service
   ports:
     - protocol: TCP
       port: 80
