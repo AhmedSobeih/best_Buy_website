@@ -15,6 +15,15 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: transactions
 
+  transactions_rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5681:5672
+      - 15681:15672
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./definitions.json:/etc/rabbitmq/definitions.json:ro
+
   transactions_app:
     build:
       context: .
@@ -24,9 +33,14 @@ services:
     depends_on:
       - transactions_postgres
       - transactions_redis
+      - transactions_rabbitmq
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://transactions_postgres:5432/transactions
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_DATA_REDIS_HOST: transactions_redis
       SPRING_DATA_REDIS_PORT: 6379
+      SPRING_RABBITMQ_HOST: transactions_rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
