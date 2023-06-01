@@ -14,4 +14,8 @@ public class AuthenticationSender {
         rabbitTemplate.convertAndSend("AuthenticationReceiver", message);
     }
 
+    public String createMessage(String token)
+    {
+        return "authenticate;" + token;
+    }
 }
