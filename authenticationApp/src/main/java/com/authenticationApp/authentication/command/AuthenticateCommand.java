@@ -1,5 +1,6 @@
 package com.authenticationApp.authentication.command;
 
+import com.authenticationApp.authentication.controller.AuthenticationService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -9,10 +10,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthenticateCommand implements Command{
 
-    @Autowired
-    public RedisTemplate<String, String> redisTemplate;
 
     public String token;
+    private final AuthenticationService authenticationService;
+
+    @Autowired
+    public AuthenticateCommand(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @Override
     public void execute() {
@@ -20,9 +25,8 @@ public class AuthenticateCommand implements Command{
         String tokenExists;
         try
         {
-            redisTemplate.opsForValue().set("myKey", "myValue");
-            tokenExists = redisTemplate.opsForValue().get(token);
-            System.out.println(tokenExists);
+            String username = authenticationService.getUserNameFromToken();
+            System.out.println(username);
         }
         catch (Exception e)
         {

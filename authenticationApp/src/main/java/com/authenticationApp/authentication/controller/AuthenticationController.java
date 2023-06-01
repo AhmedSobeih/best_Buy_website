@@ -30,6 +30,8 @@ public class AuthenticationController {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+
+
     private final AuthenticationService service;
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
@@ -59,7 +61,7 @@ public class AuthenticationController {
         String value = redisTemplate.opsForValue().get(authenticationResponse.getToken());
 
         System.out.println(value);
-
+        
         return ResponseEntity.ok(authenticationResponse);
     }
 
