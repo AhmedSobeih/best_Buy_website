@@ -60,8 +60,6 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse login(AuthenticationRequest request) {
-        System.out.println("new password: "+request.getPassword());
-        System.out.println("email: "+request.getEmail());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -117,9 +115,7 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(newPassword));
         repository.save(user);
 
-        // Re-authenticate the user with the updated credentials
-        System.out.println("new password: "+newPassword);
-        System.out.println("email: "+user.getEmail());
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getEmail(),
@@ -131,5 +127,12 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public String getUserNameFromToken(String token)
+    {
+        System.out.println("trying to get username......");
+        System.out.println("token: " + token);
+        return jwtService.extractUsername(token);
     }
 }

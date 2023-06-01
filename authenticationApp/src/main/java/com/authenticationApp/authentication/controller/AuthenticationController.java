@@ -86,7 +86,6 @@ public class AuthenticationController {
             e.printStackTrace();
         }
         var mail = jwtService.extractUsername(tokenString);
-        System.out.println(mail);
 
         return ResponseEntity.ok(token);
     }
