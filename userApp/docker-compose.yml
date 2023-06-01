@@ -9,6 +9,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: best_buy
+    networks:
+      - bestbuy
 
   user_app:
     build:
@@ -22,3 +24,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://user_postgres:5432/best_buy
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
+    networks:
+      - bestbuy
+
+networks:
+  bestbuy:
+    name: bestbuy
+    external: true
