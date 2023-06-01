@@ -1,0 +1,59 @@
+version: '3.8'
+services:
+  message_mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - data:/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: rootuser
+      MONGO_INITDB_ROOT_PASSWORD: rootpass
+
+  message_mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8100:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: rootuser
+      ME_CONFIG_MONGODB_ADMINPASSWORD: rootpass
+      ME_CONFIG_MONGODB_SERVER: message_mongodb
+    depends_on:
+      - message_mongodb
+
+  message_redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6382:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - cache:/data
+
+  message_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8082:8080
+    depends_on:
+      - message_mongodb
+      - message_mongo-express
+      - message_redis
+    environment:
+      SPRING_REDIS_HOST: message_redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_DATA_MONGODB_HOST: message_mongodb
+
+
+volumes:
+  data: {}
+  cache:
+    driver: local
+
+networks:
+  default:
+    name: mongodb_network

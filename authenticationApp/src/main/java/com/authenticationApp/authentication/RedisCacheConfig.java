@@ -1,6 +1,6 @@
 package com.authenticationApp.authentication;
 
-import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.cache.interceptor.SimpleKeyGenerator;
@@ -16,10 +16,20 @@ import java.time.Duration;
 
 @Configuration
 @EnableCaching
-public class RedisCacheConfig extends CachingConfigurerSupport {
+public class RedisCacheConfig{
+
+    //Redis server host ip/domain name
+	@Value("${spring.data.redis.host}")
+	private String redisHost;
+
+	//Redis server port
+	@Value("${spring.data.redis.port}")
+	private Integer redisPort;
+
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration("localhost", 6379);
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
         return new LettuceConnectionFactory(config);
     }
 
