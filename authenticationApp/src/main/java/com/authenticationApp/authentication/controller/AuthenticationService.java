@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -129,10 +131,36 @@ public class AuthenticationService {
                 .build();
     }
 
+    public String readTokenInClientSide(){
+        String filePath = "client.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line= reader.readLine();
+            System.out.println(line);
+            return line;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    public String authenticate(String token) {
+
+
+        String usernameExist = (String) redisTemplate.opsForValue().get(token);
+        System.out.println("userNameExist: " + usernameExist);
+        if(usernameExist == null)
+            return "null";
+        var username = jwtService.extractUsername(token);
+        return username;
+    }
+
     public String getUserNameFromToken(String token)
     {
         System.out.println("trying to get username......");
         System.out.println("token: " + token);
-        return jwtService.extractUsername(token);
+
+        return authenticate(token);
     }
 }

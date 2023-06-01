@@ -46,21 +46,6 @@ public class AuthenticationController {
         return this.authenticationDao.saveNewUser(newUser);
     }*/
 
-    public String readTokenInClientSide(){
-        String filePath = "client.txt";
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line= reader.readLine();
-            System.out.println(line);
-            return line;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-
-    }
-
-
 
     @PostMapping(path = "/register")
     public ResponseEntity<AuthenticationResponse> register(
@@ -91,18 +76,25 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "/logout")
-    public void logout(String token) {
-        //delete token from reddis
+    public String logout(@RequestParam String token) {
+        //delete token from redis
+        boolean result = redisTemplate.delete(token);
 
+//        String filePath = "client.txt";
+//        try {
+//            FileWriter writer = new FileWriter(filePath);
+//            writer.write("");
+//            writer.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        String result_txt;
+        if(result)
+            result_txt = "User Logged out";
+        else
+            result_txt = "No logged in user Exists";
 
-        String filePath = "client.txt";
-        try {
-            FileWriter writer = new FileWriter(filePath);
-            writer.write("");
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return result_txt;
     }
 
     @PostMapping(path = "/changePassword")
@@ -116,6 +108,19 @@ public class AuthenticationController {
 
     }
 
+    public String readTokenInClientSide(){
+        String filePath = "client.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line= reader.readLine();
+            System.out.println(line);
+            return line;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 
 
 
