@@ -51,7 +51,6 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request) {
         ResponseEntity<AuthenticationResponse> response = ResponseEntity.ok(service.register(request));
-
         return response;
     }
 
