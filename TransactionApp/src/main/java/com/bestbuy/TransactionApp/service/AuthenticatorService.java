@@ -1,12 +1,14 @@
 package com.bestbuy.TransactionApp.service;
 
+import org.springframework.stereotype.Service;
+
 import com.bestbuy.TransactionApp.exception.AuthExceptionSupplier;
 import com.bestbuy.TransactionApp.queue.AuthenticationSender;
 import com.bestbuy.TransactionApp.queue.responses.AuthenticationResponse;
 
 import lombok.AllArgsConstructor;
 
-
+@Service
 @AllArgsConstructor
 public class AuthenticatorService {
     final AuthenticationSender authenticationSender;
