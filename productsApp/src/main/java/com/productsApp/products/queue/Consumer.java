@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class Consumer {
 
-    @RabbitListener(queues = {"${rabbitmq.queues.auth.name}"})
-    public void consumeMessage(Request authRequest){
-        System.out.printf("Read auth request %s",authRequest.toString());
-    }
+//    @RabbitListener(queues = {"${rabbitmq.queues.auth.name}"})
+//    public void consumeMessage(Request authRequest){
+//        System.out.printf("Read auth request %s",authRequest.toString());
+//    }
 }

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+
 @Component
 public class AuthSender {
     @Value("${rabbitmq.exchange.name}")
@@ -23,8 +25,8 @@ public class AuthSender {
 
 
     public void sendAuthRequest(AuthRequest authRequest){
-        rabbitTemplate.convertAndSend(exchange,routingKey,authRequest);
-        System.out.printf("message sent %s %s",exchange,routingKey);
+        String res = (String)rabbitTemplate.convertSendAndReceive(exchange,routingKey,authRequest.getToken());
+        System.out.print(res);
     }
 
 }
