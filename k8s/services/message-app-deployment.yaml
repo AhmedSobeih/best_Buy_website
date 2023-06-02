@@ -1,0 +1,162 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-mongodb
+  template:
+    metadata:
+      labels:
+        app: message-mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: rootuser
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: rootpass
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+      volumes:
+        - name: data-volume
+          emptyDir: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-mongo-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-mongo-express
+  template:
+    metadata:
+      labels:
+        app: message-mongo-express
+    spec:
+      containers:
+        - name: mongo-express
+          image: mongo-express
+          ports:
+            - containerPort: 8081
+          env:
+            - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+              value: rootuser
+            - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+              value: rootpass
+            - name: ME_CONFIG_MONGODB_SERVER
+              value: message-mongodb
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-redis
+  template:
+    metadata:
+      labels:
+        app: message-redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:6.2-alpine
+          ports:
+            - containerPort: 6379
+          command: ["redis-server", "--save", "20", "1", "--loglevel", "warning"]
+          volumeMounts:
+            - name: cache-volume
+              mountPath: /data
+      volumes:
+        - name: cache-volume
+          emptyDir: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-app
+  template:
+    metadata:
+      labels:
+        app: message-app
+    spec:
+      containers:
+        - name: app
+          image: moeshiba/messageapp-message_app
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_REDIS_HOST
+              value: message-redis
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_DATA_MONGODB_HOST
+              value: message-mongodb
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: message-mongodb
+spec:
+  selector:
+    app: message-mongodb
+  ports:
+    - protocol: TCP
+      port: 27017
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: message-mongo-express
+spec:
+  selector:
+    app: message-mongo-express
+  ports:
+    - protocol: TCP
+      port: 8081
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: message-redis
+spec:
+  selector:
+    app: message-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: message-app
+spec:
+  selector:
+    app: message-app
+  ports:
+    - protocol: TCP
+      port: 8080
