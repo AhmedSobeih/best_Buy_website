@@ -9,20 +9,21 @@ public class AuthenticationResponse {
     Boolean isValid;
 
     public AuthenticationResponse(String str) {
+        // authenticate;userName;userId;isLoggedIn;role
         String[] strArr = str.split(";");
-        userName = strArr[0];
+        userName = strArr[1];
         if(userName.length() == 0){
             isValid = false;
             return;
         }
         isValid = true;
-        userId = Long.parseLong(strArr[1]);
-        isLoggedIn = strArr[2].equals("true");
-        role = strArr[3];
+        userId = Long.parseLong(strArr[2]);
+        isLoggedIn = strArr[3].equals("true");
+        role = strArr[4];
     }
 
     public Boolean isAdmin(){
-        return isValid && role.equals("admin");
+        return isValid && role.toLowerCase().equals("admin");
     }
 
     public Boolean isValid(){

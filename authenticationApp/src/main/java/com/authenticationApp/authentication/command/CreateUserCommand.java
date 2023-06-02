@@ -14,12 +14,13 @@ public class CreateUserCommand implements Command{
     }
 
     @Override
-    public void execute() {
+    public void setMessageContent(String[] value) {
 
     }
 
     @Override
-    public void setMessageContent(String[] value) {
-
+    public String execute() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'execute'");
     }
 }
