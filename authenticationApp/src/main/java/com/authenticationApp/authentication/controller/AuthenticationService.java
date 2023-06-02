@@ -152,9 +152,10 @@ public class AuthenticationService {
 
     public String authenticate(String token) {
         String usernameExist = (String) redisTemplate.opsForValue().get(token);
+        System.out.println("token:" + token);
         System.out.println("userNameExist: " + usernameExist);
         if(usernameExist == null)
-            return token+";"+";"+"0"+";"+"false"+";";
+            return ";"+"0"+";"+"false"+";";
         var username = jwtService.extractUsername(token);
         Optional<AuthenticationEntity> authenticationEntity = authenticationRepo.findByEmail(username);
         if (authenticationEntity.isPresent()) {
@@ -162,9 +163,9 @@ public class AuthenticationService {
             Integer id = entity.getId();
             Role role = entity.getRole();
             String role_str = role.toString().toLowerCase(Locale.ROOT);
-            return username + ";" + id + ";" + "1" + ";" + role_str;
+            return username + ";" + id + ";" + "true" + ";" + role_str;
         }
-        return ""; // Handle the case when no matching entity is found
+        return "";
     }
 
     public String replyToAuthenticateMessage(String token)
