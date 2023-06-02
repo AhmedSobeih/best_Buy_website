@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reviews-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reviews-app
+  template:
+    metadata:
+      labels:
+        app: reviews-app
+    spec:
+      containers:
+        - name: reviews-app
+          image: moeshiba/reviews-reviews_app
+          ports:
+            - containerPort: 9085
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://reviews-mongodb:27017/products
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reviews-app
+spec:
+  selector:
+    app: reviews-app
+  ports:
+    - protocol: TCP
+      port: 8085
+      targetPort: 8080
