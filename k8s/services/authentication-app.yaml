@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentication-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authentication-app
+  template:
+    metadata:
+      labels:
+        app: authentication-app
+    spec:
+      containers:
+      - name: authentication-app
+        image: moeshiba/authenticationapp-authentication_app
+        ports:
+        - containerPort: 8090
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://authentication-postgres:5432/authentication
+        - name: SPRING_DATASOURCE_USERNAME
+          value: postgres
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: password
+        - name: SPRING_DATA_REDIS_HOST
+          value: authentication-redis
+        - name: SPRING_DATA_REDIS_PORT
+          value: "6379"
+        - name: SPRING_RABBITMQ_HOST
+          value: bestbuy-rabbitmq
+        - name: SPRING_RABBITMQ_PORT
+          value: "5672"
+        - name: SPRING_RABBITMQ_USERNAME
+          value: guest
+        - name: SPRING_RABBITMQ_PASSWORD
+          value: guest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authentication-app
+spec:
+  selector:
+    app: authentication-app
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8090
+  type: LoadBalancer

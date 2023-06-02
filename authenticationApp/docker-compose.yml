@@ -4,6 +4,8 @@ services:
     image: redis:latest
     ports:
       - 6381:6379
+    networks:
+      - bestbuy
 
   authentication_postgres:
     image: postgres:latest
@@ -13,6 +15,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: authentication
+    networks:
+      - bestbuy
 
   authentication_app:
     build:
@@ -30,6 +34,14 @@ services:
       SPRING_DATA_REDIS_HOST: authentication_redis
       SPRING_DATA_REDIS_PORT: 6379
       SPRING_RABBITMQ_HOST: bestbuy_rabbitmq
-      SPRING_RABBITMQ_PORT: ل5672
+      SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
+    networks:
+      - bestbuy
+
+networks:
+  bestbuy:
+    name: bestbuy
+    external: true
+
