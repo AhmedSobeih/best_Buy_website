@@ -3,6 +3,7 @@ package com.FAM.messageApp.controller;
 import com.FAM.messageApp.model.Chat;
 import com.FAM.messageApp.model.CustomerRep;
 import com.FAM.messageApp.model.IntiateChatRequest;
+import com.FAM.messageApp.service.AuthenticatorService;
 import com.FAM.messageApp.service.ChatService;
 import com.FAM.messageApp.service.CustomerRepService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ public class ChatApiController {
 
     @Autowired
     private CustomerRepService customerRepService;
+    private final AuthenticatorService authenticatorService;
 
     @GetMapping("/{chatId}")
     public Chat getAllChatsByChId(@PathVariable String chatId){
@@ -36,12 +38,14 @@ public class ChatApiController {
     }
 
     @GetMapping("/user/{id}")
-    public List<Chat> getAllChatsByUserId(@PathVariable String id){
+    public List<Chat> getAllChatsByUserId(@PathVariable String id, @RequestHeader("userToken") String userToken){
+        authenticatorService.allowOwnerUser(id, userToken);
         return chatService.getAllChatsByUserId(id);
     }
 
     @GetMapping("/customer/{id}")
-    public List<Chat> getAllChatsByCustomerId(@PathVariable String id){
+    public List<Chat> getAllChatsByCustomerId(@PathVariable String id, @RequestHeader("userToken") String userToken){
+        authenticatorService.allowOwnerUser(id, userToken);
         return chatService.getAllChatsByCustomerId(id);
     }
 
@@ -51,7 +55,8 @@ public class ChatApiController {
     }
 
     @GetMapping("/representative/{id}")
-    public List<Chat> getAllChatsByRepresentativeId(@PathVariable String id){
+    public List<Chat> getAllChatsByRepresentativeId(@PathVariable String id, @RequestHeader("userToken") String userToken){
+        authenticatorService.allowOwnerUser(id, userToken);
         return chatService.getAllChatsByRepresentativeId(id);
     }
     @PostMapping
@@ -64,18 +69,21 @@ public class ChatApiController {
 
     }
     @DeleteMapping("/user/{id}")
-    public void deleteChatByUserId(@PathVariable String id){
+    public void deleteChatByUserId(@PathVariable String id, @RequestHeader("userToken") String userToken){
+        authenticatorService.allowOwnerUser(id, userToken);
         chatService.deleteChatById(id);
     }
 
     @PostMapping(path = "/initiate")
-    public ResponseEntity<String> intiateChat(@RequestBody IntiateChatRequest requestBody, HttpServletRequest request)
+    public ResponseEntity<String> intiateChat(@RequestBody IntiateChatRequest requestBody, HttpServletRequest request
+            , @RequestHeader("userToken") String userToken)
     {
         System.out.println("handling intiate chat request: " );
         System.out.println(requestBody);
 
-        String userName = requestBody.getUserName();
 
+        String userName = requestBody.getUserName();
+        authenticatorService.allowOwnerUser(userName, userToken);
         //Here we should find the user that would be matched
 
         //Here We should create the chat session

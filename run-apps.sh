@@ -12,3 +12,4 @@ for app in "${apps[@]}"; do
     popd
     pushd .
 done
+
