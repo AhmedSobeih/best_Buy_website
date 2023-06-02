@@ -31,16 +31,24 @@ public class UserEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     public UserEntity(){
 
     }
-    public UserEntity(Integer userId, String name, String phoneNumber, String address, Date dateOfBirth, String email) {
+    public UserEntity(Integer userId, String name, String phoneNumber, String address, Date dateOfBirth, String email, String password, Role role) {
         this.userId = userId;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.dateOfBirth = dateOfBirth;
         this.email = email;
+        this.password = password;
+        this.role = role;
     }
 
 
@@ -88,5 +96,15 @@ public class UserEntity {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
 }
