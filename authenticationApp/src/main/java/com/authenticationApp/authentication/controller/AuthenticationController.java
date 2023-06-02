@@ -31,6 +31,10 @@ public class AuthenticationController {
     private AuthenticationSender authenticationSender;
     @Autowired
     private AuthenticationReceiver authenticationReceiver;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
+
 
     @Autowired
     RedisTemplate redisTemplate;

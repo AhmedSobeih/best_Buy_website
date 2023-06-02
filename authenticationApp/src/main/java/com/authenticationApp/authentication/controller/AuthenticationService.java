@@ -40,6 +40,9 @@ public class AuthenticationService {
     @Autowired
     AuthenticationRepo authenticationRepo;
 
+    @Autowired
+    public RedisTemplate<String, String> redisTemplate;
+
     public AuthenticationResponse register(RegisterRequest request) {
         //check if user exists
         if (repository.findByEmail(request.getEmail()).isPresent()) {
@@ -77,6 +80,8 @@ public class AuthenticationService {
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
+
+        redisTemplate.opsForValue().set(jwtToken, "myValue");
        // var refreshToken = jwtService.generateRefreshToken(user);
        // revokeAllUserTokens(user);
        // saveUserToken(user, jwtToken);
