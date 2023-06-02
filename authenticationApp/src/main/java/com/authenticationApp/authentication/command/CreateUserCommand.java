@@ -25,12 +25,17 @@ public class CreateUserCommand implements Command{
         username = value[1];
         password = value[2];
         role = Role.valueOf(value[3]);
-        registerRequest = new RegisterRequest(user_id,username,password,role);
     }
 
     @Override
     public String execute() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'execute'");
+        try {
+            registerRequest = new RegisterRequest(user_id,username,password,role);
+        authenticationService.register(registerRequest);
+        return "Done";
+        } catch (Exception e) {
+            return "Error";
+        }
+        
     }
 }
