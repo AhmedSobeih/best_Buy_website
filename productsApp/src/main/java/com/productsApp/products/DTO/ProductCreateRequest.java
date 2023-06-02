@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductRequest implements Request{
+public class ProductCreateRequest implements Request{
     //    @Field(name="name")
     private String productName;
     //    @Field(name="price")
@@ -19,9 +19,11 @@ public class ProductRequest implements Request{
     //    @Field(name="description")
     private String description;
 
+    private String token;
+
 
     @Override
     public String requestType() {
-        return "product_request";
+        return "product_create_request";
     }
 }

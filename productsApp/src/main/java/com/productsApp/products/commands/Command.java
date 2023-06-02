@@ -11,7 +11,7 @@ public abstract class Command {
         return this;
     }
 
-    abstract public void execute();
+    abstract public Object execute();
 
 
 }

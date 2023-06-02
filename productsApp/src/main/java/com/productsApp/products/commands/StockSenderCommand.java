@@ -12,7 +12,9 @@ public class StockSenderCommand extends Command{
     private StockSender stockSender;
 
     @Override
-    public void execute() {
+    public Object execute() {
         stockSender.sendAddProductRequest((AddProductToStockRequest) request);
+        //TODO m3rfsh a3mel ehhhhh
+        return null;
     }
 }

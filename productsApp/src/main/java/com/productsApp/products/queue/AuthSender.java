@@ -24,9 +24,10 @@ public class AuthSender {
     }
 
 
-    public void sendAuthRequest(AuthRequest authRequest){
+    public String sendAuthRequest(AuthRequest authRequest){
         String res = (String)rabbitTemplate.convertSendAndReceive(exchange,routingKey,authRequest.getToken());
         System.out.print(res);
+        return res;
     }
 
 }
