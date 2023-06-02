@@ -5,6 +5,7 @@ import com.authenticationApp.authentication.controller.AuthenticationService;
 public class CommandFactory {
     public static Command createCommand(String message, AuthenticationService authenticationService) {
         Command command;
+        System.out.println("message: " + message);
         String[] values = message.split(";");
         String commandType = values[0];
         String[] messageContent = new String[values.length - 1];

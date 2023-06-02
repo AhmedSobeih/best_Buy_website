@@ -41,6 +41,11 @@ public class AuthenticationService {
     AuthenticationRepo authenticationRepo;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        Role role = request.getRole();
+        System.out.println("Role: " +role);
+        if(role == null)
+            role = Role.USER;
+
         //check if user exists
         if (repository.findByEmail(request.getEmail()).isPresent()) {
             logger.info("User already exists" );
@@ -50,7 +55,7 @@ public class AuthenticationService {
             var user = AuthenticationEntity.builder()
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .role(Role.USER)
+                    .role(role)
                     .build();
             var savedUser = repository.save(user);
             logger.info("User registered" );
