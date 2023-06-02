@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bestbuy-rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bestbuy-rabbitmq
+  template:
+    metadata:
+      labels:
+        app: bestbuy-rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3-management-alpine
+        ports:
+        - containerPort: 5672
+          name: amqp
+        - containerPort: 15672
+          name: management
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/rabbitmq/rabbitmq.conf
+          subPath: rabbitmq.conf
+        - name: definitions-volume
+          mountPath: /etc/rabbitmq/definitions.json
+          subPath: definitions.json
+      volumes:
+      - name: config-volume
+        configMap:
+          name: rabbitmq-config
+      - name: definitions-volume
+        configMap:
+          name: rabbitmq-definitions
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bestbuy-rabbitmq
+spec:
+  selector:
+    app: bestbuy-rabbitmq
+  ports:
+  - protocol: TCP
+    port: 5681
+    targetPort: 5672
+    name: amqp
+  - protocol: TCP
+    port: 15681
+    targetPort: 15672
+    name: management
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+data:
+  rabbitmq.conf: |
+    management.load_definitions=/etc/rabbitmq/definitions.json
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-definitions
+data:
+  definitions.json: |
+    {
+    "bindings": [],
+    "exchanges": [],
+    "global_parameters": [],
+    "parameters": [],
+    "permissions": [
+        {
+            "configure": ".*",
+            "read": ".*",
+            "user": "guest",
+            "vhost": "/",
+            "write": ".*"
+        }
+    ],
+    "policies": [],
+    "queues": [
+        {
+            "name": "AuthenticationReceiver",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-type": "classic"
+            }
+        },
+        {
+            "name": "AuthenticationSender",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-type": "classic"
+            }
+        }
+    ],
+    "rabbit_version": "3.11.16",
+    "rabbitmq_version": "3.11.16",
+    "topic_permissions": [],
+    "users": [
+        {
+            "hashing_algorithm": "rabbit_password_hashing_sha256",
+            "limits": {},
+            "name": "guest",
+            "password_hash": "sv/2vw7c08rgYsnEsCzeF+trVzrLK1CD5gbVNdg9VGjcVG4I",
+            "tags": [
+                "administrator"
+            ]
+        }
+    ],
+    "vhosts": [
+        {
+            "limits": [],
+            "metadata": {
+                "description": "Default virtual host",
+                "tags": []
+            },
+            "name": "/"
+        }
+    ]
+    }

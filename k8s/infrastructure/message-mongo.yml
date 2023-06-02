@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: message-mongodb
+  name: message-mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-mongodb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: message-mongodb
+    spec:
+      containers:
+        - image: mongo:4.4.14-rc0-focal
+          name: mongo
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: rootuser
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: rootpass 
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-claim0
+      restartPolicy: Always
+      volumes:
+        - name: mongo-claim0
+          persistentVolumeClaim:
+            claimName: mongo-claim0
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: message-mongodb
+  name: message-mongodb
+spec:
+  ports:
+    - name: "27017"
+      port: 27017
+      targetPort: 27017
+  selector:
+    app: mongo
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: mongo-claim0
+  name: mongo-claim0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}

@@ -11,7 +11,7 @@ public class AuthenticationSender {
         this.rabbitTemplate = rabbitTemplate;
     }
     public void sendMessage(String message) {
-        rabbitTemplate.convertAndSend("AuthenticationSender", message);
+        rabbitTemplate.convertAndSend("AuthenticationRec", message);
     }
 
 }

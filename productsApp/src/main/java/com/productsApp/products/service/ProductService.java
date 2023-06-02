@@ -1,7 +1,7 @@
 package com.productsApp.products.service;
 
 import com.productsApp.products.DTO.ProductRUDRequest;
-import com.productsApp.products.DTO.ProductRequest;
+import com.productsApp.products.DTO.ProductCreateRequest;
 import com.productsApp.products.DTO.ProductResponse;
 import com.productsApp.products.model.Product;
 import com.productsApp.products.repository.ProductRepository;
@@ -18,11 +18,11 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public void createProduct(ProductRequest productRequest){
+    public void createProduct(ProductCreateRequest productCreateRequest){
         Product product = Product.builder()
-                .productName(productRequest.getProductName())
-                .productPrice(productRequest.getProductPrice())
-                .description(productRequest.getDescription())
+                .productName(productCreateRequest.getProductName())
+                .productPrice(productCreateRequest.getProductPrice())
+                .description(productCreateRequest.getDescription())
                 .build();
         productRepository.save(product);
     }

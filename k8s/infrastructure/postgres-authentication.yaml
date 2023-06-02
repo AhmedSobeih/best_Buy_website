@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: postgres-authentication
+  name: postgres-authentication
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-authentication
+  template:
+    metadata:
+      labels:
+        app: postgres-authentication
+    spec:
+      containers:
+        - env:
+            - name: PGDATA
+              value: /data/postgres
+            - name: POSTGRES_DB
+              value: authentication
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: postgres
+          image: postgres:latest
+          name: postgres-authentication
+          ports:
+            - containerPort: 30001 
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/postgres
+              name: postgres-authentication-claim0
+      restartPolicy: Always
+      volumes:
+        - name: postgres-authentication-claim0
+          persistentVolumeClaim:
+            claimName: postgres-authentication-claim0
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres-authentication
+  name: postgres-authentication
+spec:
+  type: NodePort
+  ports:
+    - name: "30001"
+      port: 30001
+      targetPort: 30001
+  selector:
+    app: postgres-authentication
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: postgres-authentication-claim0
+  name: postgres-authentication-claim0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}

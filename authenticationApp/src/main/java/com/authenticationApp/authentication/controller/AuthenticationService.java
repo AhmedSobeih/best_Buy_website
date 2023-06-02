@@ -35,10 +35,10 @@ public class AuthenticationService {
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     @Autowired
-    RedisTemplate redisTemplate;
+    AuthenticationRepo authenticationRepo;
 
     @Autowired
-    AuthenticationRepo authenticationRepo;
+    public RedisTemplate<String, String> redisTemplate;
 
     public AuthenticationResponse register(RegisterRequest request) {
         Role role = request.getRole();
