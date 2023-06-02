@@ -22,7 +22,6 @@ public class ReviewService {
         Review review= Review.builder()
                 .id(reviewRequest.getId())
                 .comment(reviewRequest.getComment())
-                .date(reviewRequest.getDate())
                 .dislikes(reviewRequest.getDislikes())
                 .likes(reviewRequest.getLikes())
                 .rating(reviewRequest.getRating())

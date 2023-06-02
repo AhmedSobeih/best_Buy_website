@@ -7,6 +7,12 @@ services:
     networks:
       - bestbuy
 
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
   reviews_app:
     build:
       context: .
@@ -17,6 +23,10 @@ services:
       - reviews_mongodb
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://reviews_mongodb:27017/products
+      SPRING_RABBITMQ_HOST: bestbuy_rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
     networks:
       - bestbuy
 

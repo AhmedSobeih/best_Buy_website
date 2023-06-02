@@ -15,27 +15,10 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
-    @Value("${rabbitmq.queues.auth.name}")
-    private String authQueueName;
-
-    @Value("${rabbitmq.queues.stock.name}")
-    private String stockQueueName;
-
-    @Value("${rabbitmq.queues.auth.routingKey}")
-    private String authRoutingKey;
-
-    @Value("${rabbitmq.queues.stock.routingKey}")
-    private String stockRoutingKey;
-
     @Bean
     public TopicExchange exchange(){
         return new TopicExchange(exchange);
     }
-
-//    @Bean
-//    public MessageConverter jsonConverter(){
-//        return new Jackson2JsonMessageConverter();
-//    }
 
     @Bean
     public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory){

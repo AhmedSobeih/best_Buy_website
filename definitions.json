@@ -15,6 +15,15 @@
     "policies": [],
     "queues": [
         {
+            "name": "review_receive",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-type": "classic"
+            }
+        },
+        {
             "name": "auth_receive",
             "vhost": "/",
             "durable": true,
