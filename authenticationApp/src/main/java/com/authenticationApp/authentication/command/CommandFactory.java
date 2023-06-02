@@ -16,6 +16,9 @@ public class CommandFactory {
             case "authenticate":
                 command = new AuthenticateCommand(authenticationService);
                 break;
+            case "create_user":
+                command = new CreateUserCommand(authenticationService);
+                break;
             default:
                 throw new IllegalArgumentException("Invalid command type: " + commandType);
         }
