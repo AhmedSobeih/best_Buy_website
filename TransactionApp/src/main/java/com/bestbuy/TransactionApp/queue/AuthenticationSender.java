@@ -19,9 +19,10 @@ public class AuthenticationSender {
     public AuthenticationSender(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
-    public void sendMessage(String message) {
+    public String sendMessage(String message) {
         String res = (String) rabbitTemplate.convertSendAndReceive(exchange, authRoutingKey, message);
-        System.out.print(res);
+        System.out.print("res: " + res);
+        return res;
     }
 
     public String createMessage(String token)

@@ -21,13 +21,6 @@ public class AuthenticationReceiver {
     @Autowired
     AuthenticationService authenticationService;
 
-    @RabbitListener(queues = "AuthenticationReceiver")
-    public void receiveMessage(String message) {
-        handleMessage(message);
-        LOGGER.info("Received message: {}", message);
-        System.out.println(message);
-    }
-
     @RabbitListener(queues = "${rabbitmq.queues.auth.name}")
     public String authenticate(String message)
     {
