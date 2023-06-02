@@ -32,10 +32,10 @@ public class AuthenticatorService {
         }
     }
 
-    public void allowOwnerUser(Long ownerId, String token){
+    public void allowOwnerUser(String ownerId, String token){
         AuthenticationResponse authenticationResponse = getValidToken(token);
 
-        if(ownerId != authenticationResponse.getUserId() && !authenticationResponse.isAdmin()){
+        if(ownerId != authenticationResponse.getUserId()){
                 log.info("Not the owner");
         }
     }

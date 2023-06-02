@@ -3,7 +3,7 @@ package com.FAM.messageApp.queue.responses;
 public class AuthenticationResponse {
 
     String userName;
-    Long userId;
+    String userId;
     Boolean isLoggedIn;
     String role;
     Boolean isValid;
@@ -17,7 +17,7 @@ public class AuthenticationResponse {
             return;
         }
         isValid = true;
-        userId = Long.parseLong(strArr[2]);
+        userId = strArr[2];
         isLoggedIn = strArr[3].equals("true");
         role = strArr[4];
     }
@@ -30,7 +30,7 @@ public class AuthenticationResponse {
         return this.isValid;
     }
 
-    public Long getUserId(){
+    public String getUserId(){
         return this.userId;
     }
 
