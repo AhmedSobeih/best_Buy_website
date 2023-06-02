@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -150,16 +151,20 @@ public class AuthenticationService {
     }
 
     public String authenticate(String token) {
-
-
         String usernameExist = (String) redisTemplate.opsForValue().get(token);
         System.out.println("userNameExist: " + usernameExist);
         if(usernameExist == null)
-            return token+";"+";"+"0"+";"+"false"+";"+";";
+            return token+";"+";"+"0"+";"+"false"+";";
         var username = jwtService.extractUsername(token);
-        Optional<Integer> id = authenticationRepo.findIdByEmail(username);
-        Optional<Role> role = authenticationRepo.findRoleByEmail(username);
-        return username+";"+id + ";" + "1"+";";
+        Optional<AuthenticationEntity> authenticationEntity = authenticationRepo.findByEmail(username);
+        if (authenticationEntity.isPresent()) {
+            AuthenticationEntity entity = authenticationEntity.get();
+            Integer id = entity.getId();
+            Role role = entity.getRole();
+            String role_str = role.toString().toLowerCase(Locale.ROOT);
+            return username + ";" + id + ";" + "1" + ";" + role_str;
+        }
+        return ""; // Handle the case when no matching entity is found
     }
 
     public String replyToAuthenticateMessage(String token)

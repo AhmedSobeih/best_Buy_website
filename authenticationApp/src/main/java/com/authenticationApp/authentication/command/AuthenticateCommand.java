@@ -22,7 +22,7 @@ public class AuthenticateCommand implements Command{
     @Override
     public String execute() {
         String message_output = "authenticate;";
-
+        System.out.println("Command.execute");
         try
         {
             message_output += authenticationService.replyToAuthenticateMessage(token);
