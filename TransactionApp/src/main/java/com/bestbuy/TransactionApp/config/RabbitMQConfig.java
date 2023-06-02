@@ -32,13 +32,10 @@ public class RabbitMQConfig {
         return new TopicExchange(exchange);
     }
 
-<<<<<<< HEAD
     @Bean
     public Binding transactionsBinding(){
         return BindingBuilder.bind(transactionsQueue()).to(exchange()).with(transactionsRoutingKey);
     }
-=======
->>>>>>> tran_backup
 
     @Bean
     public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory){

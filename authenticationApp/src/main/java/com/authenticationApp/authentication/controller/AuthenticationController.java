@@ -35,11 +35,6 @@ public class AuthenticationController {
     private RedisTemplate<String, String> redisTemplate;
 
 
-
-    @Autowired
-    RedisTemplate redisTemplate;
-
-
     private final AuthenticationService service;
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
     private final JwtService jwtService;

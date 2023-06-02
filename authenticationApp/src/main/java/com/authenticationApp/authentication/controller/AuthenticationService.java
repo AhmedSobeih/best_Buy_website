@@ -35,9 +35,6 @@ public class AuthenticationService {
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     @Autowired
-    RedisTemplate redisTemplate;
-
-    @Autowired
     AuthenticationRepo authenticationRepo;
 
     @Autowired
