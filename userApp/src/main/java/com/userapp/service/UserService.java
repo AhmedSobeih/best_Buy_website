@@ -35,7 +35,8 @@ public class UserService {
         savedUser.setDateOfBirth(user.getDateOfBirth());
         if(user.getEmail() != null)
             savedUser.setEmail(user.getEmail());
-
+        if(user.getPassword() != null)
+            savedUser.setPassword(user.getPassword());
         userRepo.save(savedUser);
     }
 
