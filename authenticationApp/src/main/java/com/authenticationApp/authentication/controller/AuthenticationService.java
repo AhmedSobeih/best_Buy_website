@@ -35,10 +35,10 @@ public class AuthenticationService {
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     @Autowired
-    RedisTemplate redisTemplate;
+    AuthenticationRepo authenticationRepo;
 
     @Autowired
-    AuthenticationRepo authenticationRepo;
+    public RedisTemplate<String, String> redisTemplate;
 
     public AuthenticationResponse register(RegisterRequest request) {
         //check if user exists
@@ -77,6 +77,8 @@ public class AuthenticationService {
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
+
+        redisTemplate.opsForValue().set(jwtToken, "myValue");
        // var refreshToken = jwtService.generateRefreshToken(user);
        // revokeAllUserTokens(user);
        // saveUserToken(user, jwtToken);
