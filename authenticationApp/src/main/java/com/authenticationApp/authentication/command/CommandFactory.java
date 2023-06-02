@@ -3,6 +3,7 @@ package com.authenticationApp.authentication.command;
 import com.authenticationApp.authentication.controller.AuthenticationService;
 
 public class CommandFactory {
+
     public static Command createCommand(String message, AuthenticationService authenticationService) {
         Command command;
         System.out.println("message: " + message);

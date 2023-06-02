@@ -53,6 +53,7 @@ public class AuthenticationService {
         }
         else{
             var user = AuthenticationEntity.builder()
+                    .userId(request.getUser_id())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .role(role)
@@ -82,9 +83,7 @@ public class AuthenticationService {
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
-       // var refreshToken = jwtService.generateRefreshToken(user);
-       // revokeAllUserTokens(user);
-       // saveUserToken(user, jwtToken);
+
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();

@@ -545,3 +545,13 @@ jakarta.validation.NoProviderFoundException: Unable to create a Configuration, b
 2023-06-02 15:28:15,763 INFO o.s.a.r.c.CachingConnectionFactory [main] Attempting to connect to: [localhost:5672]
 2023-06-02 15:28:16,166 INFO o.s.a.r.c.CachingConnectionFactory [main] Created new connection: rabbitConnectionFactory#6894436e:0/SimpleConnection@489a722d [delegate=amqp://guest@127.0.0.1:5672/, localPort= 56316]
 2023-06-02 15:28:16,586 INFO c.a.a.AuthenticationApplication [main] Started AuthenticationApplication in 17.921 seconds (process running for 19.898)
+2023-06-02 19:08:03,597 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 8.0.0.Final
+2023-06-02 19:08:03,717 INFO c.a.a.AuthenticationApplication [main] Starting AuthenticationApplication using Java 17.0.6 with PID 12208 (D:\GUC\Semester 10\Scalable\best_Buy_website\authenticationApp\target\classes started by ziadk in D:\GUC\Semester 10\Scalable\best_Buy_website)
+2023-06-02 19:08:03,718 INFO c.a.a.AuthenticationApplication [main] No active profile set, falling back to 1 default profile: "default"
+2023-06-02 19:08:05,013 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2023-06-02 19:08:05,015 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-06-02 19:08:05,215 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 188 ms. Found 1 JPA repository interfaces.
+2023-06-02 19:08:05,239 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2023-06-02 19:08:05,242 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-06-02 19:08:05,263 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.authenticationApp.authentication.repository.AuthenticationRepo; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-06-02 19:08:05,263 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
