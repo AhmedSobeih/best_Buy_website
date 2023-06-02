@@ -79,6 +79,7 @@
 		<module>productsApp</module>
 		<module>messageApp</module>
 		<module>productReviewsApp/reviews</module>
-	</modules>
+        <module>api-gateway</module>
+    </modules>
 
 </project>
