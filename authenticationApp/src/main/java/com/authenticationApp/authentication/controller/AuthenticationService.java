@@ -158,7 +158,7 @@ public class AuthenticationService {
             return token+";"+";"+"0"+";"+"false"+";"+";";
         var username = jwtService.extractUsername(token);
         Optional<Integer> id = authenticationRepo.findIdByEmail(username);
-        Optional<String> role = authenticationRepo.findRoleByID(id.get());
+        Optional<Role> role = authenticationRepo.findRoleByEmail(username);
         return username+";"+id + ";" + "1"+";";
     }
 
