@@ -20,17 +20,18 @@ public class AuthenticateCommand implements Command{
     }
 
     @Override
-    public void execute() {
-
+    public String execute() {
+        String message_output = "authenticate;";
+        System.out.println("Command.execute");
         try
         {
-            String username = authenticationService.getUserNameFromToken(token);
-            System.out.println("username: " + username);
+            message_output += authenticationService.replyToAuthenticateMessage(token);
         }
         catch (Exception e)
         {
             System.out.println(e.getMessage());
         }
+        return message_output;
     }
 
     @Override

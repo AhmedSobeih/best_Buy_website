@@ -20,6 +20,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +36,9 @@ public class AuthenticationService {
 
     @Autowired
     RedisTemplate redisTemplate;
+
+    @Autowired
+    AuthenticationRepo authenticationRepo;
 
     public AuthenticationResponse register(RegisterRequest request) {
         //check if user exists
@@ -146,17 +151,23 @@ public class AuthenticationService {
     }
 
     public String authenticate(String token) {
-
-
         String usernameExist = (String) redisTemplate.opsForValue().get(token);
         System.out.println("userNameExist: " + usernameExist);
         if(usernameExist == null)
-            return "null";
+            return token+";"+";"+"0"+";"+"false"+";";
         var username = jwtService.extractUsername(token);
-        return username;
+        Optional<AuthenticationEntity> authenticationEntity = authenticationRepo.findByEmail(username);
+        if (authenticationEntity.isPresent()) {
+            AuthenticationEntity entity = authenticationEntity.get();
+            Integer id = entity.getId();
+            Role role = entity.getRole();
+            String role_str = role.toString().toLowerCase(Locale.ROOT);
+            return username + ";" + id + ";" + "1" + ";" + role_str;
+        }
+        return ""; // Handle the case when no matching entity is found
     }
 
-    public String getUserNameFromToken(String token)
+    public String replyToAuthenticateMessage(String token)
     {
         System.out.println("trying to get username......");
         System.out.println("token: " + token);

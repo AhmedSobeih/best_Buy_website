@@ -1,6 +1,6 @@
 #!/bin/bash
 #apps=("authenticationApp" "messageApp" "productsApp" "TransactionApp" "productReviewsApp/reviews" "userApp")
-apps=("authenticationApp" "TransactionApp" )
+apps=("authenticationApp")
 docker compose up --build -d #builds the container of rabbitmq server
 
 pushd .

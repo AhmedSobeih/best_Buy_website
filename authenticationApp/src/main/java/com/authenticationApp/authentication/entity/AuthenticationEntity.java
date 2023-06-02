@@ -70,4 +70,7 @@ public class AuthenticationEntity implements UserDetails {
     }
 
 
+    public Integer getId() {
+        return userId;
+    }
 }
