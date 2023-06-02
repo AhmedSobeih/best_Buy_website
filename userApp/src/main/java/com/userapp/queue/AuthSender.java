@@ -22,7 +22,7 @@ public class AuthSender {
 
 
     public void sendAuthRequest(int id, String name, String password, Role role){
-        rabbitTemplate.convertAndSend(exchange,authRoutingKey,"create_user;"+id+";"+name+";"+password+";"+role);
-        System.out.printf("message sent %s %s",exchange,authRoutingKey);
+        String res =(String)(rabbitTemplate.convertSendAndReceive(exchange,authRoutingKey,"create_user;"+id+";"+name+";"+password+";"+role));
+        System.out.printf("message sent %s %s. Response: %s",exchange,authRoutingKey, res);
     }
 }

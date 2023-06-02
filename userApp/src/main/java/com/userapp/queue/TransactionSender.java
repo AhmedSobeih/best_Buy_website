@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class TransactionSender {
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
-    @Value("${rabbitmq.queues.transacton.routingKey}")
+    @Value("${rabbitmq.queues.transactions.routingKey}")
     private String transRoutingKey;
 
     private RabbitTemplate rabbitTemplate;
@@ -20,7 +20,7 @@ public class TransactionSender {
     }
 
     public void sendTransactionRequest(int id){
-        rabbitTemplate.convertAndSend(exchange,transRoutingKey,"user_created;"+id);
+        rabbitTemplate.convertSendAndReceive(exchange,transRoutingKey,"user_created;"+id);
         System.out.printf("message sent %s %s",exchange,transRoutingKey);
     }
 }
