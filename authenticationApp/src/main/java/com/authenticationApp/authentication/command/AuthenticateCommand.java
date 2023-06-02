@@ -22,11 +22,10 @@ public class AuthenticateCommand implements Command{
     @Override
     public void execute() {
 
-        String tokenExists;
         try
         {
-            String username = authenticationService.getUserNameFromToken();
-            System.out.println(username);
+            String username = authenticationService.getUserNameFromToken(token);
+            System.out.println("username: " + username);
         }
         catch (Exception e)
         {

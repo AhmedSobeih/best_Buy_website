@@ -17,8 +17,8 @@ public class RabbitMQController {
     AuthenticationSender authenticationSender;
 
     @GetMapping("/test")
-    public String test(){
-        authenticationSender.sendMessage("authenticate;token");
+    public String test(@RequestParam String token){
+        authenticationSender.sendMessage("authenticate;"+token);
         return "messageSent";
     }
 }
