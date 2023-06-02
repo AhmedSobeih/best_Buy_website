@@ -28,39 +28,19 @@ public class RabbitMQConfig {
     private String stockRoutingKey;
 
     @Bean
-    public Queue authQueue(){
-        return new Queue(authQueueName);
-    }
-
-    @Bean
-    public Queue stockQueue(){
-        return new Queue(stockQueueName);
-    }
-
-    @Bean
     public TopicExchange exchange(){
         return new TopicExchange(exchange);
     }
 
-    @Bean
-    public Binding authBinding(){
-        return BindingBuilder.bind(authQueue()).to(exchange()).with(authRoutingKey);
-    }
-
-    @Bean
-    public Binding stockBinding(){
-        return BindingBuilder.bind(stockQueue()).to(exchange()).with(stockRoutingKey);
-    }
-
-    @Bean
-    public MessageConverter jsonConverter(){
-        return new Jackson2JsonMessageConverter();
-    }
+//    @Bean
+//    public MessageConverter jsonConverter(){
+//        return new Jackson2JsonMessageConverter();
+//    }
 
     @Bean
     public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory){
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(jsonConverter());
+        //rabbitTemplate.setMessageConverter(jsonConverter());
         return rabbitTemplate;
     }
 }

@@ -72,15 +72,16 @@ public class ProductsController {
     }
 
     @PostMapping("/sendAuthRequest")
-    public ResponseEntity testMQ(){
-        Command c = authenticateCommand.setRequest(new AuthRequest("balabizo"));
+    public ResponseEntity testMQ(@RequestParam("token") String token){
+        //elmafrood yerga3 hena commandtype;username;userID;isLoggedIn;role empty string law mesh authenticated
+        Command c = authenticateCommand.setRequest(new AuthRequest(token));
         c.execute();
         return ResponseEntity.ok("message sent to auth successfully");
     }
 
     @PostMapping("/sendAddProductToStockRequest")
     public ResponseEntity testMQ2(){
-        Command c = stockSenderCommand.AddProductRequest(new AddProductToStockRequest("lhdfiusdgfjsd","id",20,1000));
+        Command c = stockSenderCommand.setRequest(new AddProductToStockRequest("lhdfiusdgfjsd","id",20,1000));
         c.execute();
         return ResponseEntity.ok("message sent to stock successfully");
     }
