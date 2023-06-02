@@ -52,8 +52,6 @@ spec:
     port: 15681
     targetPort: 15672
     name: management
-  type: NodePort
-
 ---
 apiVersion: v1
 kind: ConfigMap
