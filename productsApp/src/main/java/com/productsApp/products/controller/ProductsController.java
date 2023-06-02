@@ -5,8 +5,6 @@ import com.productsApp.products.DTO.*;
 import com.productsApp.products.commands.AuthenticateCommand;
 import com.productsApp.products.commands.Command;
 import com.productsApp.products.commands.StockSenderCommand;
-import com.productsApp.products.model.Product;
-import com.productsApp.products.queue.AuthSender;
 import com.productsApp.products.queue.StockSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -33,16 +31,26 @@ public class ProductsController {
     private final RestTemplate restTemplate;
 
     @PostMapping
-
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody ProductRequest productRequest){
-        productService.createProduct(productRequest);
+    public ResponseEntity createProduct(@RequestBody ProductCreateRequest productCreateRequest){
+        Command c = authenticateCommand.setRequest(new AuthRequest(productCreateRequest.getToken()));
+        String res=(String)c.execute();
+        boolean isAdmin=checkTokenIsAdmin(res);
+        if(!isAdmin)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        //TODO send transactions
+        productService.createProduct(productCreateRequest);
+        return ResponseEntity.ok("Product "+productCreateRequest.getProductName()+" created successfully");
     }
     @PutMapping
-
-    @ResponseStatus(HttpStatus.OK)
-    public void updateProduct(@RequestBody ProductRUDRequest productRUDRequest){
+    public ResponseEntity updateProduct(@RequestBody ProductRUDRequest productRUDRequest){
+        Command c = authenticateCommand.setRequest(new AuthRequest(productRUDRequest.getToken()));
+        String res=(String)c.execute();
+        boolean isAdmin=checkTokenIsAdmin(res);
+        if(!isAdmin)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        //TODO send transactions
         productService.updateProduct(productRUDRequest);
+        return ResponseEntity.ok("Product "+productRUDRequest.getProductName()+" updated successfully");
     }
 
     @GetMapping
@@ -58,11 +66,17 @@ public class ProductsController {
         return productService.getProductById(id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(key = "#id",value = "Product")
-    public void deleteProduct(@PathVariable String id){
-        productService.deleteProduct(id);
+    public void deleteProduct(@RequestBody ProductRUDRequest productRUDRequest){
+        Command c = authenticateCommand.setRequest(new AuthRequest(productRUDRequest.getToken()));
+        String res=(String)c.execute();
+        boolean isAdmin=checkTokenIsAdmin(res);
+        if(!isAdmin)
+            return;
+        //TODO send transactions
+        productService.deleteProduct(productRUDRequest.getId());
     }
 
     @GetMapping("/search")
@@ -71,12 +85,16 @@ public class ProductsController {
         return productService.searchProducts(query);
     }
 
+
+    //FOR TESTING ONLY!!!
+
+
     @PostMapping("/sendAuthRequest")
     public ResponseEntity testMQ(@RequestParam("token") String token){
         //elmafrood yerga3 hena commandtype;username;userID;isLoggedIn;role empty string law mesh authenticated
         Command c = authenticateCommand.setRequest(new AuthRequest(token));
-        c.execute();
-        return ResponseEntity.ok("message sent to auth successfully");
+        String res=(String)c.execute();
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping("/sendAddProductToStockRequest")
@@ -94,6 +112,16 @@ public class ProductsController {
                 = restTemplate.getForEntity(resourceURL, String.class);
         System.out.println(response.getStatusCode());
         return ResponseEntity.ok("message sent");
+    }
+
+    public boolean checkTokenIsAdmin(String tokenResult){
+        String[] split=tokenResult.split(";");
+        return !split[1].equals("")&&split[4].equals("admin");
+    }
+
+    public boolean checkTokenIsUser(String tokenResult){
+        String[] split=tokenResult.split(";");
+        return !split[1].equals("")&&split[3].equals("true");
     }
 
 }

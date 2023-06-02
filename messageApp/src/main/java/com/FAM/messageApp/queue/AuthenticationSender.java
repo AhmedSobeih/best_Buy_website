@@ -1,11 +1,10 @@
-package com.bestbuy.TransactionApp.queue;
+package com.FAM.messageApp.queue;
 
 
+import com.FAM.messageApp.queue.responses.AuthenticationResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import com.bestbuy.TransactionApp.queue.responses.AuthenticationResponse;
 
 @Component
 public class AuthenticationSender {
@@ -25,6 +24,7 @@ public class AuthenticationSender {
         String message = "authenticate;" + token;
         String res = (String) rabbitTemplate.convertSendAndReceive(exchange, authRoutingKey, message);
         System.out.print("Authetication App response: " + res);
+
         return new AuthenticationResponse(res);
     }
 

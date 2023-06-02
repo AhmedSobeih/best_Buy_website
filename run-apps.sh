@@ -1,6 +1,6 @@
 #!/bin/bash
 #apps=("authenticationApp" "messageApp" "productsApp" "TransactionApp" "productReviewsApp/reviews" "userApp")
-apps=("authenticationApp")
+apps=("authenticationApp" "TransactionApp")
 docker compose up --build -d #builds the container of rabbitmq server
 
 pushd .
@@ -12,3 +12,4 @@ for app in "${apps[@]}"; do
     popd
     pushd .
 done
+

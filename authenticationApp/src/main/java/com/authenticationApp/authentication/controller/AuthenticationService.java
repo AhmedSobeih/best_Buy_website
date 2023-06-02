@@ -41,6 +41,11 @@ public class AuthenticationService {
     public RedisTemplate<String, String> redisTemplate;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        Role role = request.getRole();
+        System.out.println("Role: " +role);
+        if(role == null)
+            role = Role.USER;
+
         //check if user exists
         if (repository.findByEmail(request.getEmail()).isPresent()) {
             logger.info("User already exists" );
@@ -48,9 +53,10 @@ public class AuthenticationService {
         }
         else{
             var user = AuthenticationEntity.builder()
+                    .userId(request.getUser_id())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .role(Role.USER)
+                    .role(role)
                     .build();
             var savedUser = repository.save(user);
             logger.info("User registered" );
@@ -78,10 +84,6 @@ public class AuthenticationService {
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
 
-        redisTemplate.opsForValue().set(jwtToken, "myValue");
-       // var refreshToken = jwtService.generateRefreshToken(user);
-       // revokeAllUserTokens(user);
-       // saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
@@ -154,9 +156,10 @@ public class AuthenticationService {
 
     public String authenticate(String token) {
         String usernameExist = (String) redisTemplate.opsForValue().get(token);
+        System.out.println("token:" + token);
         System.out.println("userNameExist: " + usernameExist);
         if(usernameExist == null)
-            return token+";"+";"+"0"+";"+"false"+";";
+            return ";"+"0"+";"+"false"+";";
         var username = jwtService.extractUsername(token);
         Optional<AuthenticationEntity> authenticationEntity = authenticationRepo.findByEmail(username);
         if (authenticationEntity.isPresent()) {
@@ -164,9 +167,9 @@ public class AuthenticationService {
             Integer id = entity.getId();
             Role role = entity.getRole();
             String role_str = role.toString().toLowerCase(Locale.ROOT);
-            return username + ";" + id + ";" + "1" + ";" + role_str;
+            return username + ";" + id + ";" + "true" + ";" + role_str;
         }
-        return ""; // Handle the case when no matching entity is found
+        return "";
     }
 
     public String replyToAuthenticateMessage(String token)
