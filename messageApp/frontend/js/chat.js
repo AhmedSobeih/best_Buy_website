@@ -1,4 +1,4 @@
-const url = 'http://localhost:8080';
+const url = 'http://localhost:8085';
 let stompClient;
 let selectedUser;
 let selectedChatId;
