@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +35,9 @@ public class AuthenticationService {
 
     @Autowired
     RedisTemplate redisTemplate;
+
+    @Autowired
+    AuthenticationRepo authenticationRepo;
 
     public AuthenticationResponse register(RegisterRequest request) {
         //check if user exists
@@ -151,12 +155,14 @@ public class AuthenticationService {
         String usernameExist = (String) redisTemplate.opsForValue().get(token);
         System.out.println("userNameExist: " + usernameExist);
         if(usernameExist == null)
-            return "null";
+            return token+";"+";"+"0"+";"+"false"+";"+";";
         var username = jwtService.extractUsername(token);
-        return username;
+        Optional<Integer> id = authenticationRepo.findIdByEmail(username);
+        Optional<Role> role = authenticationRepo.findRoleByEmail(username);
+        return username+";"+id + ";" + "1"+";";
     }
 
-    public String getUserNameFromToken(String token)
+    public String replyToAuthenticateMessage(String token)
     {
         System.out.println("trying to get username......");
         System.out.println("token: " + token);

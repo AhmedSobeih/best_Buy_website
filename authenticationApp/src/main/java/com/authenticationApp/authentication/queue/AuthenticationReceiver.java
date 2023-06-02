@@ -22,16 +22,16 @@ public class AuthenticationReceiver {
     AuthenticationService authenticationService;
 
     @RabbitListener(queues = "${rabbitmq.queues.auth.name}")
-    public String authenticate(String message){
-        System.out.println("received message: " + message);
-        return "User authenticated! with token "+ message;
+    public String authenticate(String message)
+    {
+        return handleMessage(message);
     }
 
 
 
-    public void handleMessage(String message)
+    public String handleMessage(String message)
     {
         Command command = CommandFactory.createCommand(message, authenticationService);
-        command.execute();
+        return command.execute();
     }
 }
