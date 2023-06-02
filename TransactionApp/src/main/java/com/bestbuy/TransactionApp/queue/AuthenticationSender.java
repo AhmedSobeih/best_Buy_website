@@ -25,7 +25,6 @@ public class AuthenticationSender {
         String message = "authenticate;" + token;
         String res = (String) rabbitTemplate.convertSendAndReceive(exchange, authRoutingKey, message);
         System.out.print("Authetication App response: " + res);
-
         return new AuthenticationResponse(res);
     }
 
