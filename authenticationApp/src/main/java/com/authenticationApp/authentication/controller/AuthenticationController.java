@@ -60,35 +60,26 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request) {
         AuthenticationResponse token=service.login(request);
         String tokenString=token.getToken();
-        //redisTemplate.opsForValue().set(tokenString, "");
-        String filePath = "client.txt";
-        try {
-            FileWriter writer = new FileWriter(filePath);
-            writer.write(tokenString);
-            writer.close();
-            System.out.println("String saved to file successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        redisTemplate.opsForValue().set(tokenString, "");
         var mail = jwtService.extractUsername(tokenString);
-
         return ResponseEntity.ok(token);
     }
 
     @PostMapping(path = "/logout")
     public String logout(@RequestParam String token) {
         return service.logout(token);
-
     }
 
     @PostMapping(path = "/changePassword")
-    public ResponseEntity<AuthenticationResponse> changePassword(@RequestBody Map<String, String> request) {
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> request) {
         String newPassword = request.get("newPassword");
-        String tokenString = readTokenInClientSide();
+        String tokenString = request.get("token");
+        if(service.authenticate(tokenString).equals(null))
+            return ResponseEntity.ok("User not authenticated");
         var mail = jwtService.extractUsername(tokenString);
         AuthenticationResponse newToken = service.changePassword(mail,newPassword);
         logout(tokenString);
-        return ResponseEntity.ok(newToken);
+        return ResponseEntity.ok("Password Changed");
 
     }
 

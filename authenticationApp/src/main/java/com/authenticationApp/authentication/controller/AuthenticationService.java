@@ -100,18 +100,7 @@ public class AuthenticationService {
 
     public String logout(String token) {
 
-        String filePath = "client.txt";
-        try {
-            FileWriter writer = new FileWriter(filePath);
-            writer.write("");
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "logout successful";
-
         //delete token from redis
-        /*
         boolean result = redisTemplate.delete(token);
         String result_txt;
         if(result)
@@ -119,9 +108,7 @@ public class AuthenticationService {
         else
             result_txt = "No logged in user Exists";
 
-        return result_txt;*/
-
-
+        return result_txt;
     }
 
     public AuthenticationResponse changePassword(String mail, String newPassword) {
