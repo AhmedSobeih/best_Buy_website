@@ -1,16 +1,6 @@
 {
     "bindings": [],
-    "exchanges": [
-        {
-            "name": "exchange",
-            "vhost": "/",
-            "type": "topic",
-            "durable": true,
-            "auto_delete": true,
-            "internal": false,
-            "arguments": {}
-        }
-    ],
+    "exchanges": [],
     "global_parameters": [],
     "parameters": [],
     "permissions": [
@@ -25,10 +15,19 @@
     "policies": [],
     "queues": [
         {
+            "name": "auth_receive",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-type": "classic"
+            }
+        },
+        {
             "name": "AuthenticationReceiver",
             "vhost": "/",
             "durable": true,
-            "auto_delete": true,
+            "auto_delete": false,
             "arguments": {
                 "x-queue-type": "classic"
             }
@@ -37,7 +36,7 @@
             "name": "AuthenticationSender",
             "vhost": "/",
             "durable": true,
-            "auto_delete": true,
+            "auto_delete": false,
             "arguments": {
                 "x-queue-type": "classic"
             }
