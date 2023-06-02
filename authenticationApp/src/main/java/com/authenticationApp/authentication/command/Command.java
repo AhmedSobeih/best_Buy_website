@@ -3,7 +3,7 @@ package com.authenticationApp.authentication.command;
 import lombok.Data;
 
 public interface Command {
-    void execute();
+    String execute();
     void setMessageContent(String[] value);
 
 }
