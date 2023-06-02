@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8081:8090
+      - 8081:8080
     depends_on:
       - authentication_postgres
       - authentication_redis
