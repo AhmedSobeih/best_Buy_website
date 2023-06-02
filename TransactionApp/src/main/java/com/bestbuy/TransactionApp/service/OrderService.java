@@ -37,10 +37,6 @@ public class OrderService {
         return null;
     }
 
-    public OrderResponse cancelOrder(Long orderId) {
-        throw new NoSuchElementException("Not implemented yet");
-    }
-
     private boolean updateStock(List<OrderItem> orderItemList) {
         orderItemList.stream().forEach((orderItem ->
                 stockService.canDecrementStockOrThrow(orderItem.getProductId(), orderItem.getQuantity())));

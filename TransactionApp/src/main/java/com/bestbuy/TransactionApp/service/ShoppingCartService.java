@@ -23,6 +23,7 @@ public class ShoppingCartService{
     private final CartItemService cartItemService;
     private final CartExceptionSupplier cartExceptionSupplier;
     private final CartItemExceptionSupplier cartItemExceptionSupplier;
+    private final StockService stockService;
 
     @Autowired
     private final RedisCacheService redisCacheService;
@@ -78,8 +79,23 @@ public class ShoppingCartService{
     }
 
     public CartItemResponse updateCartItem(Long userId,Long cartItemId, Integer quantity) {
+        ShoppingCart shoppingCart = getShoppingCart(userId);
+        int index = -1;
+        for(CartItem cartItem:shoppingCart.getCartItemList()){
+            if(cartItem.getId()==cartItemId){
+                index = shoppingCart.getCartItemList().indexOf(cartItem);
+                break;
+            }
+        }
+        if(index == -1)
+            throw cartItemExceptionSupplier.notFound(cartItemId);
+
         CartItem cartItem = cartItemService.getCartItemById(cartItemId);
-        cartItem.setQuantity(cartItem.getQuantity()+quantity);
+
+        int newQuantity = cartItem.getQuantity()+quantity;
+        stockService.canDecrementStockOrThrow(cartItem.getProductId(), newQuantity); // throws if no enough stock
+
+        cartItem.setQuantity(newQuantity);
         if(cartItem.getQuantity()<=0){
             this.deleteCartItem(cartItemId,userId);
             return cartItemService.mapToCartItemResponse(cartItem);
