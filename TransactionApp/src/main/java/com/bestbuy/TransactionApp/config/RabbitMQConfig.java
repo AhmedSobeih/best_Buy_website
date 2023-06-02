@@ -13,9 +13,18 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
-    @Value("${rabbitmq.queues.auth.routingKey}")
-    private String authRoutingKey;
+    @Value("${rabbitmq.queues.transactions.name}")
+    private String transactionsQueueName;
 
+    @Value("${rabbitmq.queues.transactions.routingKey}")
+    private String transactionsRoutingKey;
+
+
+
+    @Bean
+    public Queue transactionsQueue(){
+        return new Queue(transactionsQueueName);
+    }
 
 
     @Bean
@@ -23,6 +32,10 @@ public class RabbitMQConfig {
         return new TopicExchange(exchange);
     }
 
+    @Bean
+    public Binding transactionsBinding(){
+        return BindingBuilder.bind(transactionsQueue()).to(exchange()).with(transactionsRoutingKey);
+    }
 
     @Bean
     public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory){
