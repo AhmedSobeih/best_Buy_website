@@ -19,13 +19,14 @@ spec:
             - containerPort: 9085
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://reviews-mongodb:27017/products
+              value: mongodb://reviews-mongodb.default.svc.cluster.local:27017/products
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: reviews-app
 spec:
+  type: LoadBalancer
   selector:
     app: reviews-app
   ports:

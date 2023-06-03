@@ -19,7 +19,7 @@ spec:
             - containerPort: 8091
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://transactions-postgres:5432/transactions
+              value: jdbc:postgresql://transactions-postgres.default.svc.cluster.local:5432/transactions
             - name: SPRING_DATASOURCE_USERNAME
               value: postgres
             - name: SPRING_DATASOURCE_PASSWORD
@@ -63,6 +63,7 @@ kind: Service
 metadata:
   name: transactions-app
 spec:
+  type: LoadBalancer
   selector:
     app: transactions-app
   ports:

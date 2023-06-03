@@ -27,7 +27,7 @@ spec:
           image: postgres:latest
           name: postgres-authentication
           ports:
-            - containerPort: 30001 
+            - containerPort: 5432
           resources: {}
           volumeMounts:
             - mountPath: /data/postgres
@@ -46,11 +46,10 @@ metadata:
     app: postgres-authentication
   name: postgres-authentication
 spec:
-  type: NodePort
   ports:
-    - name: "30001"
-      port: 30001
-      targetPort: 30001
+    - port: 5432
+      targetPort: 5432
+
   selector:
     app: postgres-authentication
 status:

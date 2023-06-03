@@ -19,9 +19,9 @@ spec:
       containers:
         - env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://postgres-authentication:30001/authentication
-            - name: SPRING_PROFILES_ACTIVE
-              value: docker
+              value: jdbc:postgresql://postgres-authentication.default.svc.cluster.local:5432/authentication?useSSL=false
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: update
             - name: SPRING_DATASOURCE_USERNAME
               value: postgres
             - name: SPRING_DATASOURCE_PASSWORD
@@ -41,6 +41,8 @@ spec:
 
           image: moeshiba/authenticationapp-authentication_app:latest
           name: authentication-service
+          ports:
+           - containerPort: 8081
           resources: {}
       restartPolicy: Always
 status: {}
@@ -52,6 +54,7 @@ metadata:
     app:  authentication-app
   name:  authentication-app
 spec:
+  type: LoadBalancer
   ports:
     - name: "8081"
       port: 8081
@@ -60,3 +63,4 @@ spec:
     app:  authentication-app
 status:
   loadBalancer: {}
+

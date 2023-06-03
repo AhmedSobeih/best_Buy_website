@@ -19,11 +19,19 @@ spec:
             - containerPort: 9099
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://products-mongodb:27017/products
+              value: mongodb://products-mongodb.default.svc.cluster.local:27017/products
             - name: SPRING_DATA_REDIS_PORT
               value: "6379"
             - name: SPRING_DATA_REDIS_HOST
               value: products-redis
+            - name: SPRING_RABBITMQ_HOST
+              value: bestbuy-rabbitmq
+            - name: SPRING_RABBITMQ_PORT
+              value: "5681"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: guest
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: guest  
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -61,6 +69,7 @@ kind: Service
 metadata:
   name: products-app
 spec:
+  type: LoadBalancer
   selector:
     app: products-app
   ports:

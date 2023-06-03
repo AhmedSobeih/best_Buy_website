@@ -19,17 +19,26 @@ spec:
             - containerPort: 8080
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://user-postgres:5432/best_buy
+              value: jdbc:postgresql://postgres-user.default.svc.cluster.local:5432/best_buy
             - name: SPRING_DATASOURCE_USERNAME
               value: postgres
             - name: SPRING_DATASOURCE_PASSWORD
               value: password
+            - name: SPRING_RABBITMQ_HOST
+              value: bestbuy-rabbitmq
+            - name: SPRING_RABBITMQ_PORT
+              value: "5681"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: guest
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: guest
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: user-app
 spec:
+  type: LoadBalancer
   selector:
     app: user-app
   ports:

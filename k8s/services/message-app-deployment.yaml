@@ -119,6 +119,7 @@ kind: Service
 metadata:
   name: message-mongodb
 spec:
+  type: LoadBalancer
   selector:
     app: message-mongodb
   ports:
