@@ -13,3 +13,7 @@ for app in "${apps[@]}"; do
     pushd .
 done
 
+# run the API gateway
+docker build -t bestbuy_nginx_image .
+docker run -d -p 8102:80 --network=bestbuy --name=bestbuy_nginx bestbuy_nginx_image:latest
+

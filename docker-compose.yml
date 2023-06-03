@@ -10,28 +10,15 @@ services:
       - ./definitions.json:/etc/rabbitmq/definitions.json:ro
     networks:
       - bestbuy
-  
-#  eureka_server:
-#    build:
-#      context: ./eurekaServer
-#      dockerfile: Dockerfile
-#    ports:
-#      - 8761:8761
-#    networks:
-#      - bestbuy
 
-#  api_gateway:
-#    build:
-#      context: ./api-gateway
-#      dockerfile: Dockerfile
-#    ports:
-#      - 8101:8080
-#    links:
-#      - eureka_server
-#    environment:
-#      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka_server:8761/eureka
-#    networks:
-#      - bestbuy
+  # bestbuy_nginx:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 8102:80
+  #   networks:
+  #     - bestbuy
 
 networks:
   bestbuy:
