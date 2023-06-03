@@ -38,7 +38,7 @@ kind: Service
 metadata:
   name: user-app
 spec:
-  type: LoadBalancer
+  # type: LoadBalancer
   selector:
     app: user-app
   ports:

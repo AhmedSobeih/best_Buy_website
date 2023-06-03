@@ -63,7 +63,7 @@ kind: Service
 metadata:
   name: transactions-app
 spec:
-  type: LoadBalancer
+  # type: LoadBalancer
   selector:
     app: transactions-app
   ports:

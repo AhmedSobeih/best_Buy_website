@@ -1,0 +1,54 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /authenticate
+            pathType: Prefix
+            backend:
+              service:
+                name: authentication-app
+                port:
+                  number: 8081
+          - path: /products
+            pathType: Prefix
+            backend:
+              service:
+                name: products-app
+                port:
+                  number: 8083
+          - path: /user
+            pathType: Prefix
+            backend:
+              service:
+                name: user-app
+                port:
+                  number: 8086
+          - path: /api/review
+            pathType: Prefix
+            backend:
+              service:
+                name: products-app
+                port:
+                  number: 8085
+          - path: /api/chat
+            pathType: Prefix
+            backend:
+              service:
+                name: message-app
+                port:
+                  number: 8080
+          - path: /api/message
+            pathType: Prefix
+            backend:
+              service:
+                name: message-app
+                port:
+                  number: 8080
+
+
+
+          

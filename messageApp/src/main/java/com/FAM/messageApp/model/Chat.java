@@ -1,9 +1,10 @@
 package com.FAM.messageApp.model;
 
-import java.time.LocalDateTime;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+import nonapi.io.github.classgraph.json.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
 
 @Data
 @Document
