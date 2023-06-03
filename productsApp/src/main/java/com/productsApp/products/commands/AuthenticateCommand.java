@@ -13,7 +13,8 @@ public class AuthenticateCommand extends Command{
     private AuthSender authSender;
 
     @Override
-    public void execute() {
-        authSender.sendAuthRequest((AuthRequest) request);
+    public Object execute() {
+        String res=authSender.sendAuthRequest((AuthRequest) request);
+        return res;
     }
 }

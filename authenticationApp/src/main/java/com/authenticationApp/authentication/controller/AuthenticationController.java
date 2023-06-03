@@ -1,6 +1,7 @@
 package com.authenticationApp.authentication.controller;
 
 
+import com.authenticationApp.authentication.config.JwtService;
 import com.authenticationApp.authentication.dao.AuthenticationDao;
 import com.authenticationApp.authentication.entity.AuthenticationEntity;
 import com.authenticationApp.authentication.queue.AuthenticationReceiver;
@@ -12,13 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.Map;
 
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/login")
+@RequestMapping(path = "/authentication")
 public class AuthenticationController {
 
     @Autowired
@@ -30,8 +34,10 @@ public class AuthenticationController {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+
     private final AuthenticationService service;
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+    private final JwtService jwtService;
 
     /*@PostMapping(path = "/test")
     public AuthenticationEntity saveNewUser(
@@ -39,35 +45,65 @@ public class AuthenticationController {
         return this.authenticationDao.saveNewUser(newUser);
     }*/
 
+
     @PostMapping(path = "/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request) {
         ResponseEntity<AuthenticationResponse> response = ResponseEntity.ok(service.register(request));
-        logger.info("user registerd", response);
         return response;
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<AuthenticationResponse> authenticate(
+    public ResponseEntity<AuthenticationResponse> login(
             @RequestBody AuthenticationRequest request) {
-        AuthenticationResponse authenticationResponse = service.authenticate(request);
-
-        //Adding token to cache
-        redisTemplate.opsForValue().set(authenticationResponse.getToken(), "this is a token");
-
-        //getting token from cache
-        String value = redisTemplate.opsForValue().get(authenticationResponse.getToken());
-
-        System.out.println(value);
-
-        return ResponseEntity.ok(authenticationResponse);
+        AuthenticationResponse token=service.login(request);
+        String tokenString=token.getToken();
+        redisTemplate.opsForValue().set(tokenString, "");
+        var mail = jwtService.extractUsername(tokenString);
+        return ResponseEntity.ok(token);
     }
+
+    @PostMapping(path = "/logout")
+    public String logout(@RequestParam String token) {
+        return service.logout(token);
+    }
+
+    @PostMapping(path = "/changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> request) {
+        String newPassword = request.get("newPassword");
+        String tokenString = request.get("token");
+        if(service.authenticate(tokenString).equals(null))
+            return ResponseEntity.ok("User not authenticated");
+        var mail = jwtService.extractUsername(tokenString);
+        AuthenticationResponse newToken = service.changePassword(mail,newPassword);
+        logout(tokenString);
+        return ResponseEntity.ok("Password Changed");
+
+    }
+
+    public String readTokenInClientSide(){
+        String filePath = "client.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line= reader.readLine();
+            System.out.println(line);
+            return line;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+
 
     @GetMapping(path = "/test")
     public String testing() {
         authenticationSender.sendMessage("Hello world");
         return "Hello world";
     }
+
+
 
 
     /*@GetMapping(path = "/getAllUsers")

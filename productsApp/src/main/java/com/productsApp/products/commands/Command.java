@@ -11,17 +11,7 @@ public abstract class Command {
         return this;
     }
 
-    public Command AddProductRequest(Request request) {
-        this.request=request;
-        return this;
-    }
-
-    public Command CreateProduct(Request request) {
-        this.request=request;
-        return this;
-    }
-
-    abstract public void execute();
+    abstract public Object execute();
 
 
 }

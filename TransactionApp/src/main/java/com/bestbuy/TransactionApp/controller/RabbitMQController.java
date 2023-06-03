@@ -1,13 +1,11 @@
 package com.bestbuy.TransactionApp.controller;
 
 
-import com.bestbuy.TransactionApp.dto.OrderResponse;
 import com.bestbuy.TransactionApp.queue.AuthenticationSender;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import com.bestbuy.TransactionApp.queue.responses.AuthenticationResponse;
 
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/rabbit")
@@ -17,8 +15,7 @@ public class RabbitMQController {
     AuthenticationSender authenticationSender;
 
     @GetMapping("/test")
-    public String test(){
-        authenticationSender.sendMessage("authenticate;token");
-        return "messageSent";
+    public AuthenticationResponse test(@RequestParam String token){
+        return authenticationSender.authenticateUser(token);
     }
 }

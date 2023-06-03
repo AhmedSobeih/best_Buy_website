@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: transactions-postgres
+  name: transactions-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transactions-postgres
+  template:
+    metadata:
+      labels:
+        app: transactions-postgres
+    spec:
+      containers:
+        - env:
+            - name: PGDATA
+              value: /data/postgres
+            - name: POSTGRES_DB
+              value: transactions
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: postgres
+          image: postgres:latest
+          name: postgres-authentication
+          ports:
+            - containerPort: 5432 
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/postgres
+              name: transactions-postgres-claim0
+      restartPolicy: Always
+      volumes:
+        - name: transactions-postgres-claim0
+          persistentVolumeClaim:
+            claimName: transactions-postgres-claim0
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: transactions-postgres
+  name: transactions-postgres
+spec:
+  type: NodePort
+  ports:
+    - name: "5442"
+      port: 5442
+      targetPort: 5432
+  selector:
+    app: transactions-postgres
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: transactions-postgres-claim0
+  name: transactions-postgres-claim0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}

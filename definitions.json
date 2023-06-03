@@ -15,6 +15,24 @@
     "policies": [],
     "queues": [
         {
+            "name": "auth_receive",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-type": "classic"
+            }
+        },
+        {
+            "name": "transactions_receive",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-queue-type": "classic"
+            }
+        },
+        {
             "name": "AuthenticationReceiver",
             "vhost": "/",
             "durable": true,

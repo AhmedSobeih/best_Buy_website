@@ -24,7 +24,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8084:8091
+      - 8084:8080
     depends_on:
       - transactions_postgres
       - transactions_redis

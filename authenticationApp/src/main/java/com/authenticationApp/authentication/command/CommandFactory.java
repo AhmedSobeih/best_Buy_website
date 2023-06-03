@@ -1,8 +1,12 @@
 package com.authenticationApp.authentication.command;
 
+import com.authenticationApp.authentication.controller.AuthenticationService;
+
 public class CommandFactory {
-    public static Command createCommand(String message) {
+
+    public static Command createCommand(String message, AuthenticationService authenticationService) {
         Command command;
+        System.out.println("message: " + message);
         String[] values = message.split(";");
         String commandType = values[0];
         String[] messageContent = new String[values.length - 1];
@@ -10,7 +14,10 @@ public class CommandFactory {
 
         switch (commandType) {
             case "authenticate":
-                command = new AuthenticateCommand();
+                command = new AuthenticateCommand(authenticationService);
+                break;
+            case "create_user":
+                command = new CreateUserCommand(authenticationService);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid command type: " + commandType);
