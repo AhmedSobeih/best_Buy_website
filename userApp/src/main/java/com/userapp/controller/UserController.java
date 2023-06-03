@@ -2,6 +2,7 @@ package com.userapp.controller;
 
 import com.userapp.DTO.Request;
 import com.userapp.commands.AuthenticateCommand;
+import com.userapp.commands.TransactionCommand;
 import com.userapp.entity.UserEntity;
 import com.userapp.service.UserService;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class UserController {
     private AuthenticateCommand authenticateCommand;
 
     @Autowired
-    private AuthenticateCommand transactionCommand;
+    private TransactionCommand transactionCommand;
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 

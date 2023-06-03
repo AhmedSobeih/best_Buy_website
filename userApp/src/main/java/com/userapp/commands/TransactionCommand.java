@@ -2,6 +2,7 @@ package com.userapp.commands;
 
 import com.userapp.DTO.Request;
 import com.userapp.queue.AuthSender;
+import com.userapp.queue.TransactionSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +10,11 @@ import org.springframework.stereotype.Service;
 public class TransactionCommand extends Command {
 
     @Autowired
-    private AuthSender authSender;
+    private TransactionSender transactionSender;
 
     @Override
     public void execute() {
-        authSender.sendAuthRequest(request.getId(),request.getName(),request.getPassword(),request.getRole());
+        transactionSender.sendTransactionRequest(request.getId());
     }
 
     public Command setRequest(Request request) {
