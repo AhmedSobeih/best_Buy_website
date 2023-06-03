@@ -2,7 +2,7 @@ package com.FAM.messageApp.controller;
 
 import com.FAM.messageApp.model.Chat;
 import com.FAM.messageApp.model.CustomerRep;
-import com.FAM.messageApp.model.IntiateChatRequest;
+import com.FAM.messageApp.model.InitiateChatRequest;
 import com.FAM.messageApp.service.AuthenticatorService;
 import com.FAM.messageApp.service.ChatService;
 import com.FAM.messageApp.service.CustomerRepService;
@@ -75,7 +75,7 @@ public class ChatApiController {
     }
 
     @PostMapping(path = "/initiate")
-    public ResponseEntity<String> intiateChat(@RequestBody IntiateChatRequest requestBody, HttpServletRequest request
+    public ResponseEntity<String> intiateChat(@RequestBody InitiateChatRequest requestBody, HttpServletRequest request
             , @RequestHeader("userToken") String userToken)
     {
         System.out.println("handling intiate chat request: " );

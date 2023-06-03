@@ -17,7 +17,6 @@ public class ChatService {
     @Autowired
     private final ChatRepository chatRepository;
 
-
     public void createChat(Chat chat){
         log.info("create chat "+ chat.getId() + " username "+ chat.getCustomerId()+ " rep ID "+ chat.getRepresentativeId());
         chatRepository.save(chat);

@@ -3,12 +3,12 @@ package com.FAM.messageApp.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class IntiateChatRequest {
+public class InitiateChatRequest {
     private String userName;
 
 
     @JsonCreator
-    public IntiateChatRequest(@JsonProperty("userName")String userName) {
+    public InitiateChatRequest(@JsonProperty("userName")String userName) {
         this.userName = userName;
     }
 

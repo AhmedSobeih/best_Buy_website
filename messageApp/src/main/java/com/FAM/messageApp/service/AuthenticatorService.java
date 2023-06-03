@@ -12,32 +12,22 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AuthenticatorService {
     final AuthenticationSender authenticationSender;
-
     private AuthenticationResponse getValidToken(String token){
         AuthenticationResponse authenticationResponse = authenticationSender.authenticateUser(token);
-
         if(!authenticationResponse.isValid())
             log.info("invalid Token");
-
         return authenticationResponse;
-
     }
-
     public void allowAdmin(String token){
-
         AuthenticationResponse authenticationResponse = getValidToken(token);
-        
         if(!authenticationResponse.isAdmin()){
             log.info("not Admin");
         }
     }
-
     public void allowOwnerUser(String ownerId, String token){
         AuthenticationResponse authenticationResponse = getValidToken(token);
-
         if(ownerId != authenticationResponse.getUserId()){
                 log.info("Not the owner");
         }
     }
-    
 }

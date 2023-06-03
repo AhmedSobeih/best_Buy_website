@@ -33,6 +33,4 @@ public class AuthenticationResponse {
     public String getUserId(){
         return this.userId;
     }
-
-    
 }

@@ -19,11 +19,8 @@ import java.util.Set;
 @Slf4j
 public class CustomerRepService {
     private static final String HASH_KEY = "customer_rep_queue";
-
     @Autowired
     private RedisTemplate redisTemplate;
-
-
 
     public CustomerRep save(CustomerRep customerRep){
         ZSetOperations<String, CustomerRep> zSetOps = redisTemplate.opsForZSet();
